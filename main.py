@@ -58,13 +58,13 @@ def create_nodes(lines):
 
         edge = Edge(out_node, in_node, random.choice(world))
         edges.append(edge)
-    return nodes, edges
+    return nodes.values(), edges
 
 import random
 import copy
 import statistics
 
-def get_spread(seeds, nodes, edges):
+def get_spread(seeds):
     changed = True
     while changed:
         changed = False
@@ -115,10 +115,10 @@ def main():
     for i in range(1, k):
         best_node = None
         best_node_spread = 0
-        for n in nodes.values():
+        for n in nodes:
             seed = S[:]
             seed.append(n)
-            seed_spreads = [get_spread(seed, nodes, edges) for i in range(100)]
+            seed_spreads = [get_spread(seed) for i in range(100)]
             sigma_s = sum(seed_spreads)/len(seed_spreads)
             if sigma_s > best_node_spread:
                 best_node_spread = sigma_s
