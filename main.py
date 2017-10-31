@@ -1,5 +1,6 @@
-data_file = "Data/soc.txt"
+data_file = "Data/soc2.txt"
 world = [1000, 100, 10]
+prob_safe = 0.9
 
 class Node:
     def __init__(self, user_id):
@@ -106,13 +107,25 @@ def gan(sets, nodes, set_amount, k):
 
 def main():
     c = 256
-    t = 100
+    k = 50
     lines = get_lines()
     nodes, edges = create_nodes(lines)
     print("hehi")
     S = []
-    for k in range(16, 17):
-        orig = S[:]
+    for i in range(1, k):
+        best_node = None
+        best_node_spread = 0
+        for n in nodes.values():
+            seed = S[:]
+            seed.append(n)
+            seed_spreads = [get_spread(seed, nodes, edges) for i in range(100)]
+            sigma_s = sum(seed_spreads)/len(seed_spreads)
+            if sigma_s > best_node_spread:
+                best_node_spread = sigma_s
+                best_node = n
+        print(i, best_node_spread)
+        S.append(best_node)
+
 
 #        seeds = [random.sample(list(nodes.values()), k) for i in range(c)]
 #        for cross_generations in range(t):
