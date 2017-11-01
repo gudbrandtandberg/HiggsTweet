@@ -65,26 +65,23 @@ import copy
 import statistics
 
 def get_spread(seeds):
-    changed = True
-    while changed:
-        changed = False
-        for s in [node for node in seeds if not node.done]:
-            changed = True
+    spread = []
+    while len(seeds) > 0:
+        frontier = []
+        for s in seeds:
+            spread.append(s)
             s.done = True
-            nodes_to_add = []
-            for e in [edge for edge in s.out_edges if not edge.tried \
-                                                  and not edge.to_node.done]:
-                e.tried = True
+            for e in [edge for edge in s.out_edges if not edge.to_node.done]:
                 if random.randint(1, e.p) == 1:
-                    nodes_to_add.append(e.to_node)
-        seeds.extend(nodes_to_add)
+                    frontier.append(e.to_node)
+        seeds = frontier
 
-    for node in seeds:
+    for node in spread:
         node.done = False
-        for e in node.edges:
-            e.tried = False
+#        for e in node.edges:
+#            e.tried = False
 
-    return len(seeds)
+    return len(spread)
 
 def create_child_set(a, b, k):
     c = [node for node in a if node not in b]
@@ -108,22 +105,28 @@ def gan(sets, nodes, set_amount, k):
 def main():
     c = 256
     k = 50
+    spread_iterations = 100
     lines = get_lines()
     nodes, edges = create_nodes(lines)
     print("hehi")
+    print(sorted([len(n.in_edges) for n in nodes]))
     S = []
     for i in range(1, k):
         best_node = None
         best_node_spread = 0
-        for n in nodes:
+        l = 0
+        for n in [node for node in nodes if node not in S]:
+            l += 1
+            print(l)
             seed = S[:]
             seed.append(n)
-            seed_spreads = [get_spread(seed) for i in range(100)]
+            seed_spreads = [get_spread(seed) for j in range(spread_iterations)]
             sigma_s = sum(seed_spreads)/len(seed_spreads)
             if sigma_s > best_node_spread:
                 best_node_spread = sigma_s
                 best_node = n
-        print(i, best_node_spread)
+                print(sigma_s)
+        print(i, best_node_spread, len(best_node.out_edges))
         S.append(best_node)
 
 
