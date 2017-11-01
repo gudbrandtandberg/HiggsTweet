@@ -58,11 +58,12 @@ def create_nodes(lines):
 
         edge = Edge(out_node, in_node, random.choice(world))
         edges.append(edge)
-    return nodes.values(), edges
+    return nodes, edges
 
 import random
 import copy
 import statistics
+import multiprocessing
 
 def get_spread(seeds):
     spread = []
@@ -102,30 +103,50 @@ def gan(sets, nodes, set_amount, k):
             sets_to_try.append(cross_set)
     return sets_to_try
 
+def get_best_seed_nodes(nodes_to_try, base_seed, nodes, q):
+    spread_iterations = 100
+    best_node = None
+    best_node_spread = 0
+    for n in nodes_to_try:
+        seed = base_seed[:]
+        seed.append(n)
+        seed_spreads = [get_spread(seed) for j in range(spread_iterations)]
+        sigma_s = sum(seed_spreads)/len(seed_spreads)
+        if sigma_s > best_node_spread:
+            best_node_spread = sigma_s
+            best_node = n
+    q.put((best_node_spread, best_node.user_id))
+
+
 def main():
     c = 256
     k = 50
-    spread_iterations = 100
+    parallel = 8
     lines = get_lines()
-    nodes, edges = create_nodes(lines)
+    nodes_dict, edges = create_nodes(lines)
+    nodes = list(nodes_dict.values())
     print("hehi")
     print(sorted([len(n.in_edges) for n in nodes]))
     S = []
     for i in range(1, k):
-        best_node = None
-        best_node_spread = 0
-        l = 0
-        for n in [node for node in nodes if node not in S]:
-            l += 1
-            print(l)
-            seed = S[:]
-            seed.append(n)
-            seed_spreads = [get_spread(seed) for j in range(spread_iterations)]
-            sigma_s = sum(seed_spreads)/len(seed_spreads)
-            if sigma_s > best_node_spread:
-                best_node_spread = sigma_s
-                best_node = n
-                print(sigma_s)
+        nodes_to_try = [node for node in nodes if node not in S]
+        batch_size = len(nodes_to_try) // parallel
+        q = multiprocessing.Queue()
+        jobs = []
+        for j in range(parallel):
+            p = multiprocessing.Process(
+                    target=get_best_seed_nodes,
+                    args=(nodes_to_try[j*batch_size:(j+1)*batch_size], S, nodes, q))
+            jobs.append(p)
+            p.start()
+        best_in_batch = []
+        for proc in jobs:
+            best_in_batch.append(q.get())
+            proc.join()
+
+        best_node_spread, best_node_id = sorted(best_in_batch)[0]
+        best_node = nodes_dict[best_node_id]
+
         print(i, best_node_spread, len(best_node.out_edges))
         S.append(best_node)
 
