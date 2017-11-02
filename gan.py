@@ -1,18 +1,24 @@
-def create_child_set(a, b, k):
+import random
+def create_child_set(a, b):
     c = [node for node in a if node not in b]
-    c.extend(b)
-    return random.sample(list(c), k)
+    child = []
+    for i in range(len(b)):
+        if i < len(b) // 2:
+            child.append(a[i])
+        else:
+            child.append(b[i])
+    return child
 
-def gan(sets, nodes, set_amount, k):
-    good_sets = int(set_amount**(1/2))
-    best_seeds = [a[0] for a in sorted(sets, key=lambda x: x[1])[len(sets)-good_sets:]]
-    sets_to_try = []
-    safe_cross = int(k*prob_safe)
-    rand_cross = k - safe_cross
-    print(safe_cross, rand_cross)
-    for i in range(len(best_seeds)):
-        for j in range(i, len(best_seeds)):
-            cross_set = create_child_set(best_seeds[i], best_seeds[j], safe_cross)
-            cross_set.extend(random.sample(list(nodes.values()), rand_cross))
-            sets_to_try.append(cross_set)
-    return sets_to_try
+def mutate_set(seed_set, G, p):
+    for i in range(len(seed_set)):
+        if random.randint(1, p) == 1:
+            seed_set[i] = random.choice(list(G.nodes))
+    return seed_set
+
+def gan(sorted_spreads):
+    elites = sorted_spreads[:2]
+    while len(elites) < len(sorted_spreads):
+        a, b = random.sample(sorted_spreads, 2)
+        elites.append(create_child_set(a, b))
+    return elites
+
