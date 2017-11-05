@@ -3,55 +3,38 @@ import random
 import statistics
 import multiprocessing
 
+from spread import get_expected_spread
+
 data_file = "Data/soc2.txt"
 #data_file = "Data/higgs-social_network.edgelist"
 world = [1000, 100, 10]
-prob_safe = 0.9
-
-def get_spread(G, seeds):
-    spread = []
-    while len(seeds) > 0:
-        frontier = []
-        for s in seeds:
-            if not G.node[s]['visited']:
-                G.node[s]['visited'] = True
-                spread.append(s)
-                for n in G.neighbors(s):
-                    p = G[s][n]['weight']
-                    if random.randint(1, p) == 1:
-                        frontier.append(n)
-        seeds = frontier
-
-    for s in spread:
-        G.node[s]['visited'] = False
-
-    return len(spread)
 
 def celf(G, k):
-    spread_iterations = 100
-    S = []
-    Q = []
-    last_seed = None
-    cur_best = None
+    spread_iterations = 1
+    Q = celf_set_mg1_mg2(G, k, spread_iterations)
+    spreads = celf_get_spreads(G, k, Q, spread_iterations)
+    return spreads
+
+def celf_set_mg1_mg2(G, k, spread_iterations):
+    cur_best, cur_best_mg1 = None, 0
     l = len(G.nodes)
     i = 0
     for u in G.nodes:
         i += 1
         print(l, i)
-        G.node[u]['mg1'] = get_expected_spread(G, [u], spread_iterations)
+        u_mg1 = get_expected_spread(G, [u], spread_iterations)
+        G.node[u]['mg1'] = u_mg1
         G.node[u]['prev_best'] = cur_best
-        mg2_seed = [u]
-        if cur_best is not None:
-            mg2_seed = [u, cur_best]
+        mg2_seed = [u] if cur_best is None else [u, cur_best]
         G.node[u]['mg2'] = get_expected_spread(G, mg2_seed, spread_iterations)
-        Q.append(u)
-        cur_best_mg1 = 0
-        for node in G.nodes:
-            if G.node[node]['mg1'] > cur_best_mg1:
-                cur_best = node
-    Q = sorted(Q, key=lambda x: G.node[x]['mg1'], reverse=True)
-    print("for done")
+        if u_mg1 > cur_best_mg1:
+            cur_best, cur_best_mg1 = u, u_mg1
+    return sorted(G.nodes, key=lambda x: G.node[x]['mg1'], reverse=True)
+
+def celf_get_spreads(G, k, Q, spread_iterations):
+    S = []
     spreads = []
+    last_seed = None
     while len(S) < k:
         print(len(S))
         u = Q[0]
@@ -59,6 +42,7 @@ def celf(G, k):
             S.append(u)
             Q.remove(u)
             last_seed = u
+            spreads.append(S[:])
             continue
         elif G.node[u]['prev_best'] == last_seed:
             G.node[u]['mg1'] = G.node[u]['mg2']
@@ -81,12 +65,7 @@ def celf(G, k):
         #heapify Q
         Q.append(u)
         Q = sorted(Q, key=lambda x: G.node[x]['mg1'], reverse=True)
-        spreads.append(S[:])
     return spreads
-
-def get_expected_spread(G, seed, iterations):
-    seed_spreads = [get_spread(G, seed) for j in range(iterations)]
-    return sum(seed_spreads)/len(seed_spreads)
 
 def get_best_seed_nodes(nodes_to_try, base_seed, G, q):
     spread_iterations = 100
@@ -120,29 +99,6 @@ def get_networkx_digraph():
             G.add_node(node, visited=False, mg1=0, mg2=0, flag=0, prev_best=None)
         G.add_weighted_edges_from(edges)
     return G
-
-from gan import gan, mutate_set
-def gan_main():
-    c = 100
-    k = 10
-    population = 100
-    G = get_networkx_digraph()
-    nodes, edges = G.nodes, G.edges
-    print("hehi")
-    spreads = []
-    for i in range(population):
-        S = random.sample(nodes, k)
-        Sigma_S = get_expected_spread(G, S, c)
-        spreads.append((Sigma_S, S))
-    print(sum([a[0] for a in spreads])/len(spreads))
-    best_spread = [a[1] for a in sorted(spreads, reverse=True)]
-
-    for i in range(1000):
-        children = gan(best_spread)
-        children = [mutate_set(child, G, 10) for child in children]
-        children_spreads = [(get_expected_spread(G, child, c), child) for child in children]
-        best_spread = [a[1] for a in sorted(spreads, reverse=True)]
-        print(sum([a[0] for a in children_spreads])/len(children_spreads))
 
 def main():
     c = 256
