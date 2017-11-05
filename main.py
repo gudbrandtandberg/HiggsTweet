@@ -3,7 +3,7 @@ import random
 import statistics
 import multiprocessing
 
-from spread import get_expected_spread
+from spread import get_expected_spread, get_marginal_gain
 
 data_file = "Data/soc2.txt"
 #data_file = "Data/higgs-social_network.edgelist"
@@ -35,6 +35,8 @@ def celf_get_spreads(G, k, Q, spread_iterations):
     S = []
     spreads = []
     last_seed = None
+    cur_best = Q[0]
+    cur_best_spread = G.node[cur_best]['mg1']
     while len(S) < k:
         print(len(S))
         u = Q[0]
@@ -47,21 +49,18 @@ def celf_get_spreads(G, k, Q, spread_iterations):
         elif G.node[u]['prev_best'] == last_seed:
             G.node[u]['mg1'] = G.node[u]['mg2']
         else:
-            tmpS = S[:]
-            tmpS.append(u)
-            expected_spread_u = get_expected_spread(G, tmpS, spread_iterations) 
-            marginal_gain = expected_spread_u - get_expected_spread(G, S, spread_iterations)
+            mg_mg1 = get_marginal_gain(G, S, [], [u], spread_iterations)
+            G.node[u]['mg1'] = mg_mg1
             G.node[u]['prev_best'] = cur_best
-            curbestS = S[:]
-            curbestS.append(cur_best)
-            G.node[u]['mg2'] = expected_spread_u - get_expected_spread(G, curbestS, spread_iterations)
+
+            mg_mg2 = get_marginal_gain(G, S, [cur_best], [cur_best, u], spread_iterations)
+            G.node[u]['mg2'] = mg_mg2
+
+            if mg_mg1 > cur_best_spread:
+                cur_best = u
+                cur_best_marginal_gain = mg_mg1
         G.node[u]['flag'] = len(S)
 
-        #update cur_best
-        cur_best_mg1 = 0
-        for u in G.nodes:
-            if G.node[u]['mg1'] > cur_best_mg1:
-                cur_best = u
         #heapify Q
         Q.append(u)
         Q = sorted(Q, key=lambda x: G.node[x]['mg1'], reverse=True)
