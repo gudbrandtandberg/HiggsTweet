@@ -1,0 +1,79 @@
+\documentclass[12pt, oneside]{article}   	
+\usepackage{geometry}                		
+\geometry{letterpaper}                   		                		
+\usepackage[parfill]{parskip}    		
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{float}
+\usepackage{color}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+
+% For MATLAB
+\usepackage[framed, useliterate]{mcode}
+\usepackage{listings} % For displaying code
+
+% For algorithms
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\usepackage{hyperref}
+
+%%%% Useful formulas %%%%
+
+\definecolor{red}{rgb}{1,0,0}
+\def\red#1{{\color{red}#1}}
+\definecolor{blu}{rgb}{0,0,1}
+\def\blu#1{{\color{blu}#1}}
+
+\newcommand{\argmin}[1]{\mathop{\hbox{argmin}}_{#1}}
+\newcommand{\argmax}[1]{\mathop{\hbox{argmax}}_{#1}}
+\def\norm#1{\|#1\|}
+\def\R{\mathbb{R}}
+\def\argmax{\mathop{\rm arg\,max}}
+\def\argmin{\mathop{\rm arg\,min}}
+\def\half{\frac 1 2}
+
+\newcommand{\fig}[2]{\includegraphics[width=#1\textwidth]{./#2}}
+\newcommand{\centerfig}[2]{\begin{center}\includegraphics[width=#1\textwidth]{./#2}\end{center}}
+\newcommand{\code}[1]{\lstinputlisting[language=Matlab]{../#1}}
+
+%%%% Assignment Specific Stuff %%%%
+
+\title{HiggsTweet: Analyzing Influence Propagation During a Viral Event on Twitter}
+\author{Kristian Flatheim Jensen \\ Gudbrand Tandberg}
+%\date{}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+\subsection{The Data Set}
+
+\subsection{Earlier Work}
+
+\cite{chen2009efficient}
+
+\subsection{Contribution}
+
+\section{Our Approach}
+
+\subsection{Estimating Influence Probabilities}
+
+
+\subsection{Influence Maximization}
+
+\section{Results} 
+
+\section{Discussion}
+
+\subsection{Scalability}
+
+\subsection{Future Work}
+
+\bibliography{bibliography.bib}
+\bibliographystyle{plain}
+
+\end{document} 

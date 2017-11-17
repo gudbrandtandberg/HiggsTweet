@@ -1,0 +1,11 @@
+0) Beregne p_uv; edge-probabilities
+
+1) Skrive kode for å kjøre MC/IC simuleringer
+
+simulate_independent_cascade(G, S, r) -> E(sigma(S)) 
+
+implement greedy-algorithm; for each t: S += argmax(modular gain)
+
+
+
+
