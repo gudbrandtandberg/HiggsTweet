@@ -7,10 +7,10 @@ from spread import get_expected_spread, get_expected_spread_parallel, get_margin
 
 data_file = "Data/soc2.txt"
 #data_file = "Data/higgs-social_network.edgelist"
-world = [1000, 100, 10]
+world = [0.001, 0.01, 0.1]
 
 def celf(G, k):
-    spread_iterations = 10
+    spread_iterations = 100
     Q = celf_set_mg1_mg2(G, k, spread_iterations)
     spreads = celf_get_spreads(G, k, Q, spread_iterations)
     return spreads

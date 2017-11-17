@@ -15,7 +15,7 @@ def get_spread(G, seeds):
                 for n in G.neighbors(s):
                     if not G.node[n]['visited']:
                         p = G[s][n]['weight']
-                        if random.randint(1, p) == 1:
+                        if p > random.random():
                             frontier.append(n)
         seeds = frontier
 
