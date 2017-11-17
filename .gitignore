@@ -1,2 +1,6 @@
 Data/higgs-social_network.edgelist
-./Data/*.edgelist
+Data/*.edgelist
+__pycache__/
+.DS_store
+*.lprof
+*.prof

@@ -1,133 +1,150 @@
-data_file = "Data/soc.txt"
-world = [1000, 100, 10]
+import networkx as nx
+import random
+import statistics
+import multiprocessing
 
-class Node:
-    def __init__(self, user_id):
-        self.user_id = user_id
-        self.edges = []
-        self.out_edges = []
-        self.in_edges = []
-        self.done = False
+from spread import get_expected_spread, get_expected_spread_parallel, get_marginal_gain
 
-    def add_out_edge(self, edge):
-        self.edges.append(edge)
-        self.out_edges.append(edge)
+data_file = "Data/soc2.txt"
+#data_file = "Data/higgs-social_network.edgelist"
+world = [0.001, 0.01, 0.1]
 
-    def add_in_edge(self, edge):
-        self.edges.append(edge)
-        self.in_edges.append(edge)
+def celf(G, k):
+    spread_iterations = 100
+    Q = celf_set_mg1_mg2(G, k, spread_iterations)
+    spreads = celf_get_spreads(G, k, Q, spread_iterations)
+    return spreads
 
-class Edge:
-    def __init__(self, from_node, to_node, p):
-        self.from_node = from_node
-        self.to_node = to_node
-        self.p = p
-        self.tried = False
-
-        self.from_node.add_out_edge(self)
-        self.to_node.add_in_edge(self)
-
-def get_lines():
-    lines = []
+import copy
+def celf_set_mg1_mg2(G, k, spread_iterations):
+    cur_best = None
+    cur_best_G = copy.deepcopy(G)
+    cur_best_spread = []
+    l = len(G.nodes)
     i = 0
+    for u in G.nodes:
+        i += 1
+        print(l, i)
+        u_mg1, spread_mg1 = get_expected_spread(G, [u], spread_iterations)
+        G.node[u]['mg1'] = u_mg1
+        G.node[u]['prev_best'] = cur_best
+#        mg2_seed = [u] if cur_best is None else [u, cur_best]
+        G.node[u]['mg2'], _ = get_expected_spread(cur_best_G, [u], spread_iterations)
+        if cur_best is None or G.node[u]['mg1'] > G.node[cur_best]['mg1']:
+            for n in cur_best_spread:
+                cur_best_G.node[n]['visited'] = False
+            for s in spread_mg1:
+                cur_best_G.node[s]['visited'] = True
+            cur_best = u
+            cur_best_spread = spread_mg1
+    return sorted(G.nodes, key=lambda x: G.node[x]['mg1'], reverse=True)
+
+def celf_get_spreads(G, k, Q, spread_iterations):
+    S = []
+    spreads = []
+    last_seed = None
+    cur_best = Q[0]
+    base_spreads = [None for i in range(k)]
+    while len(S) < k:
+        print(len(S))
+        u = Q[0]
+        if G.node[u]['flag'] == len(S):
+            S.append(u)
+            Q.remove(u)
+            last_seed = u
+            spreads.append(S[:])
+            continue
+        elif G.node[u]['prev_best'] == last_seed:
+            G.node[u]['mg1'] = G.node[u]['mg2']
+        else:
+            if base_spreads[len(S)] == None:
+                _, base_spread = get_expected_spread(G, S, spread_iterations)
+                base_spreads[len(S)] = base_spread
+            base_spread = base_spreads[len(S)]
+            for b in base_spread:
+                G.node[b]['visited'] = True
+            mg_mg1 = get_marginal_gain(G, [], [], [u], spread_iterations)
+            G.node[u]['mg1'] = mg_mg1
+            G.node[u]['prev_best'] = cur_best
+
+            mg_mg2 = get_marginal_gain(G, [], [cur_best], [cur_best, u], spread_iterations)
+            G.node[u]['mg2'] = mg_mg2
+            for b in base_spread:
+                G.node[b]['visited'] = False
+
+            cur_best = max(u, cur_best, key=lambda x: G.node[x]['mg1'])
+        G.node[u]['flag'] = len(S)
+
+        #heapify Q
+        Q.append(u)
+        Q = sorted(Q, key=lambda x: G.node[x]['mg1'], reverse=True)
+    return spreads
+
+def get_best_seed_nodes(nodes_to_try, base_seed, G, q):
+    spread_iterations = 100
+    best_node = None
+    best_node_spread = 0
+    for n in nodes_to_try:
+        seed = base_seed[:]
+        seed.append(n)
+        seed_spreads = [get_spread(G, seed)[0] for j in range(spread_iterations)]
+        sigma_s = sum(seed_spreads)/len(seed_spreads)
+        if sigma_s > best_node_spread:
+            best_node_spread = sigma_s
+            best_node = n
+    q.put((best_node_spread, best_node))
+
+def get_networkx_digraph():
+    G = nx.DiGraph()
     with open(data_file, "r") as f:
+        nodes = []
+        edges = []
         for l in f:
             line = l.split(" ")
             if len(line) == 2:
-                i += 1
-#                if i == 10000000:
-#                    break
                 f, t = line
-                lines.append((int(f), int(t)))
-    return lines
-
-def create_nodes(lines):
-    nodes = {}
-    edges = []
-    for f,t in lines:
-        if not f in nodes.keys():
-            out_node = Node(f)
-            nodes[f] = out_node
-        if not t in nodes.keys():
-            in_node = Node(t)
-            nodes[t] = in_node
-
-        out_node = nodes[f]
-        in_node = nodes[t]
-
-        edge = Edge(out_node, in_node, random.choice(world))
-        edges.append(edge)
-    return nodes, edges
-
-import random
-import copy
-import statistics
-
-def get_spread(seeds, nodes, edges):
-    changed = True
-    while changed:
-        changed = False
-        for s in [node for node in seeds if not node.done]:
-            changed = True
-            s.done = True
-            nodes_to_add = []
-            for e in [edge for edge in s.out_edges if not edge.tried \
-                                                  and not edge.to_node.done]:
-                e.tried = True
-                if random.randint(1, e.p) == 1:
-                    nodes_to_add.append(e.to_node)
-        seeds.extend(nodes_to_add)
-
-    for node in seeds:
-        node.done = False
-        for e in node.edges:
-            e.tried = False
-
-    return len(seeds)
-
-def create_child_set(a, b, k):
-    c = [node for node in a if node not in b]
-    c.extend(b)
-    return random.sample(list(c), k)
-
-def gan(sets, nodes, set_amount, k):
-    good_sets = int(set_amount**(1/2))
-    best_seeds = [a[0] for a in sorted(sets, key=lambda x: x[1])[len(sets)-good_sets:]]
-    sets_to_try = []
-    safe_cross = int(k*prob_safe)
-    rand_cross = k - safe_cross
-    print(safe_cross, rand_cross)
-    for i in range(len(best_seeds)):
-        for j in range(i, len(best_seeds)):
-            cross_set = create_child_set(best_seeds[i], best_seeds[j], safe_cross)
-            cross_set.extend(random.sample(list(nodes.values()), rand_cross))
-            sets_to_try.append(cross_set)
-    return sets_to_try
+                f, t = int(f), int(t)
+                w = random.choice(world)
+                nodes.append(f)
+                nodes.append(t)
+                edges.append((f, t, w))
+        for node in set(nodes):
+            G.add_node(node, visited=False, mg1=0, mg2=0, flag=0, prev_best=None)
+        G.add_weighted_edges_from(edges)
+    return G
 
 def main():
     c = 256
-    t = 100
-    lines = get_lines()
-    nodes, edges = create_nodes(lines)
+    k = 5
+    parallel = 8
+    G = get_networkx_digraph()
+    nodes, edges = G.nodes, G.edges
     print("hehi")
+    spreads = celf(G, 50)
+    for S in spreads:
+        spread, _ = get_expected_spread(G, S, 1000, mean=True)
+        print(len(S), spread)
+    exit(0)
     S = []
-    for k in range(16, 17):
-        orig = S[:]
+    for i in range(1, k):
+        nodes_to_try = [node for node in nodes if node not in S]
+        batch_size = len(nodes_to_try) // parallel
+        q = multiprocessing.Queue()
+        jobs = []
+        for j in range(parallel):
+            p = multiprocessing.Process(
+                    target=get_best_seed_nodes,
+                    args=(nodes_to_try[j*batch_size:(j+1)*batch_size], S, G, q))
+            jobs.append(p)
+            p.start()
+        best_in_batch = []
+        for proc in jobs:
+            best_in_batch.append(q.get())
+            proc.join()
 
-#        seeds = [random.sample(list(nodes.values()), k) for i in range(c)]
-#        for cross_generations in range(t):
-#            spread = []
-#            sets = []
-#            for seed in seeds:
-#                orig = seed[:]
-#                seed_spreads = [get_spread(seed, nodes, edges) for i in range(100)]
-#                sigma_s = sum(seed_spreads)/len(seed_spreads)
-#                spread.append(sigma_s)
-#                sets.append((orig, sigma_s))
-#            print(k, len(seeds), sum(spread)/len(spread), statistics.median(spread))
-#            seeds = gan(sets, nodes, c, k)
+        best_node_spread, best_node = sorted(best_in_batch)[-1]
+        print(i, best_node_spread, len(list(G.neighbors(best_node))))
+        S.append(best_node)
 
 if __name__ == "__main__":
     main()
-
-
