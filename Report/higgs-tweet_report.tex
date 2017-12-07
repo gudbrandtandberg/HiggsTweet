@@ -1,4 +1,5 @@
-\documentclass[12pt, oneside]{article}   	
+\documentclass[sigconf]{acmart}
+
 \usepackage{geometry}                		
 \geometry{letterpaper}                   		                		
 \usepackage[parfill]{parskip}    		
@@ -10,68 +11,94 @@
 \usepackage{amsfonts}
 \usepackage{amsmath}
 
-% For MATLAB
 \usepackage[framed, useliterate]{mcode}
 \usepackage{listings} % For displaying code
-
-% For algorithms
 \usepackage{algorithm}
 \usepackage{algorithmic}
-
 \usepackage{hyperref}
 
-%%%% Useful formulas %%%%
-
-\definecolor{red}{rgb}{1,0,0}
-\def\red#1{{\color{red}#1}}
-\definecolor{blu}{rgb}{0,0,1}
-\def\blu#1{{\color{blu}#1}}
-
-\newcommand{\argmin}[1]{\mathop{\hbox{argmin}}_{#1}}
-\newcommand{\argmax}[1]{\mathop{\hbox{argmax}}_{#1}}
-\def\norm#1{\|#1\|}
-\def\R{\mathbb{R}}
-\def\argmax{\mathop{\rm arg\,max}}
-\def\argmin{\mathop{\rm arg\,min}}
-\def\half{\frac 1 2}
-
-\newcommand{\fig}[2]{\includegraphics[width=#1\textwidth]{./#2}}
-\newcommand{\centerfig}[2]{\begin{center}\includegraphics[width=#1\textwidth]{./#2}\end{center}}
-\newcommand{\code}[1]{\lstinputlisting[language=Matlab]{../#1}}
-
-%%%% Assignment Specific Stuff %%%%
+\acmISBN{}
+\acmDOI{} 
+\setcopyright{none}
+\settopmatter{printacmref=false, printccs=false, printfolios=true}
 
 \title{HiggsTweet: Analyzing Influence Propagation During a Viral Event on Twitter}
-\author{Kristian Flatheim Jensen \\ Gudbrand Tandberg}
-%\date{}
+
+\author{Kristian Flatheim Jensen}
+\affiliation{%
+\institution{Norwegian University of Science and Technology}
+}
+
+\author{Gudbrand Tandberg}
+\affiliation{%
+\institution{University of British Colombia}
+}
 
 \begin{document}
 \maketitle
 
+\begin{abstract}
+This is the abstract
+\end{abstract}
+
 \section{Introduction}
 
-\subsection{The Data Set}
+Analyze the power dynamics in the physics web-community at the time of a viral event.
 
-\subsection{Earlier Work}
+Q: Which users to influence if we wish to spread scientific misinformation? 
 
-\cite{chen2009efficient}
+\section{Related Work}
 
-\subsection{Contribution}
+\nocite{*}
+
+\section{Preliminaries}
+
+Present IM problem
+
+\section{The Data Set}
+
+Social Network + Action Log
+
+500k users; 14M edges (following/followee); 500k directed, typed actions
 
 \section{Our Approach}
 
-\subsection{Estimating Influence Probabilities}
+Combining social network $+$ "action edges" and running community based IM. 
+
+\subsection{Computing Edge Probabilities}
+
+\textbf{Idea:} Use WC probs with different weights for different action-types. 
+
+\begin{itemize}
+
+\item Hard to validate
+
+\item Hard to compare
+
+\item Effects of $p_{uv}$ on runtime. 
+
+\item Effects of $p_{uv}$ on spread. 
+
+\end{itemize}
 
 
 \subsection{Influence Maximization}
+
+Greedy, CELF, or MIA? What to do..
+
+\textbf{Idea:} Divide and conquer--preprocess with community detection. Wang (2012)
 
 \section{Results} 
 
 \section{Discussion}
 
-\subsection{Scalability}
-
 \subsection{Future Work}
+
+Impact of time. 
+
+Content of tweets - sentiment analysis. 
+
+Compute $p_{uv}$ using unsupervised learning approach. Perform evaluative analysis. 
 
 \bibliography{bibliography.bib}
 \bibliographystyle{plain}

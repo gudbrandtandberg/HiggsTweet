@@ -5,3 +5,9 @@ __pycache__/
 **/.DS_store
 *.lprof
 *.prof
+Report/*.log
+Report/*.bbl
+Report/*.blg
+Report/*.out
+Report/*.aux
+Report/*.gz

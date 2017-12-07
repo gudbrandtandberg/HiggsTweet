@@ -1,9 +1,44 @@
 \begin{thebibliography}{1}
 
+\bibitem{bonchi2011influence}
+Francesco Bonchi.
+\newblock Influence propagation in social networks: A data mining perspective.
+\newblock {\em IEEE Intelligent Informatics Bulletin}, 12(1):8--16, 2011.
+
+\bibitem{chen2013information}
+Wei Chen, Laks~VS Lakshmanan, and Carlos Castillo.
+\newblock Information and influence propagation in social networks.
+\newblock {\em Synthesis Lectures on Data Management}, 5(4):1--177, 2013.
+
 \bibitem{chen2009efficient}
 Wei Chen, Yajun Wang, and Siyu Yang.
 \newblock Efficient influence maximization in social networks.
 \newblock In {\em Proceedings of the 15th ACM SIGKDD international conference
   on Knowledge discovery and data mining}, pages 199--208. ACM, 2009.
+
+\bibitem{de2013anatomy}
+Manlio De~Domenico, Antonio Lima, Paul Mougel, and Mirco Musolesi.
+\newblock The anatomy of a scientific rumor.
+\newblock {\em Scientific reports}, 3:2980, 2013.
+
+\bibitem{goyal2010learning}
+Amit Goyal, Francesco Bonchi, and Laks~VS Lakshmanan.
+\newblock Learning influence probabilities in social networks.
+\newblock In {\em Proceedings of the third ACM international conference on Web
+  search and data mining}, pages 241--250. ACM, 2010.
+
+\bibitem{saito2008prediction}
+Kazumi Saito, Ryohei Nakano, and Masahiro Kimura.
+\newblock Prediction of information diffusion probabilities for independent
+  cascade model.
+\newblock In {\em Knowledge-based intelligent information and engineering
+  systems}, pages 67--75. Springer, 2008.
+
+\bibitem{wang2010community}
+Yu~Wang, Gao Cong, Guojie Song, and Kunqing Xie.
+\newblock Community-based greedy algorithm for mining top-k influential nodes
+  in mobile social networks.
+\newblock In {\em Proceedings of the 16th ACM SIGKDD international conference
+  on Knowledge discovery and data mining}, pages 1039--1048. ACM, 2010.
 
 \end{thebibliography}
