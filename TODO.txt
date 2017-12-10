@@ -1,10 +1,10 @@
-0) Beregne p_uv; edge-probabilities
+Todo / ideas: 
 
-1) Skrive kode for å kjøre MC/IC simuleringer
+Use sliding window!
 
-simulate_independent_cascade(G, S, r) -> E(sigma(S)) 
+Use pandas for action log?!
 
-implement greedy-algorithm; for each t: S += argmax(modular gain)
+Beregne p_uv; edge-probabilities
 
 
 

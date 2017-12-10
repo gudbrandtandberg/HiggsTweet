@@ -1184,7 +1184,7 @@ Computing Machinery]
 \def\acmArticleSeq#1{\def\@acmArticleSeq{#1}}
 \acmArticleSeq{\@acmArticle}
 \def\acmYear#1{\def\@acmYear{#1}}
-\acmYear{\the\year}
+\acmYear{}
 \def\acmMonth#1{\def\@acmMonth{#1}}
 \acmMonth{\the\month}
 \def\@acmPubDate{\ifcase\@acmMonth\or
@@ -1222,7 +1222,7 @@ Computing Machinery]
     obsolete.  I am going to ignore it}}
 \def\keywords#1{\def\@keywords{#1}}
 \keywords{}
-\renewenvironment{abstract}{\Collect@Body\@saveabstract}{}
+\renewenvironment{abstract}{}{}
 \long\def\@saveabstract#1{\long\gdef\@abstract{#1}}
 \@saveabstract{}
 \long\def\@lempty{}

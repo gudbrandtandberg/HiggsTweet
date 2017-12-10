@@ -38,18 +38,34 @@
 \maketitle
 
 \begin{abstract}
-This is the abstract
+In this project we analyze the influence dynamics within a certain interest-group during a viral event. The event in question is the 4. July 2012 discovery of the Higgs boson, made by researchers at CERN in Switzerland. We study a scraped dataset comprising of an underlying 450k-user Twitter follower network together with 13M lines of an action log, collected between the 1st and 8th of July 2012. We find that 
 \end{abstract}
 
 \section{Introduction}
 
-Analyze the power dynamics in the physics web-community at the time of a viral event.
+Possible goals:
+
+Analyze the influence dynamics of a web-community during a viral event. Quite general. Quite a hard problem. 
 
 Q: Which users to influence if we wish to spread scientific misinformation? 
 
-\section{Related Work}
+Q: Do the power dynamics computed from the action log change over time? 
 
-\nocite{*}
+Q: Do the computed seed-nodes (using IM) differ significantly from time to time / do they differ much from simpler statistical centrality heuristics? 
+
+Interesting statistics: 
+
+- general activity through time of an average user (cluster?)
+
+
+
+Limitations: 
+
+- very incomplete dataset
+
+- only pairwise interactions
+
+\section{Related Work}
 
 \section{Preliminaries}
 
@@ -100,6 +116,7 @@ Content of tweets - sentiment analysis.
 
 Compute $p_{uv}$ using unsupervised learning approach. Perform evaluative analysis. 
 
+\nocite{*}
 \bibliography{bibliography.bib}
 \bibliographystyle{plain}
 
