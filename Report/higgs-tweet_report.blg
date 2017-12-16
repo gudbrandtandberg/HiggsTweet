@@ -3,44 +3,49 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: higgs-tweet_report.aux
 The style file: plain.bst
 Database file #1: bibliography.bib.bib
-You've used 7 entries,
+Repeated entry---line 97 of file bibliography.bib.bib
+ : @inproceedings{bakshy2011everyone
+ :                                  ,
+I'm skipping whatever remains of this entry
+You've used 12 entries,
             2118 wiz_defined-function locations,
-            543 strings with 5495 characters,
-and the built_in function-call counts, 3003 in all, are:
-= -- 314
-> -- 125
-< -- 4
-+ -- 50
-- -- 42
-* -- 202
-:= -- 463
-add.period$ -- 25
-call.type$ -- 7
-change.case$ -- 42
+            569 strings with 6644 characters,
+and the built_in function-call counts, 5312 in all, are:
+= -- 549
+> -- 245
+< -- 7
++ -- 98
+- -- 84
+* -- 365
+:= -- 825
+add.period$ -- 43
+call.type$ -- 12
+change.case$ -- 78
 chr.to.int$ -- 0
-cite$ -- 7
-duplicate$ -- 125
-empty$ -- 237
-format.name$ -- 42
-if$ -- 663
+cite$ -- 12
+duplicate$ -- 214
+empty$ -- 405
+format.name$ -- 84
+if$ -- 1165
 int.to.chr$ -- 0
-int.to.str$ -- 7
-missing$ -- 7
-newline$ -- 38
-num.names$ -- 14
-pop$ -- 48
+int.to.str$ -- 12
+missing$ -- 12
+newline$ -- 63
+num.names$ -- 24
+pop$ -- 89
 preamble$ -- 1
-purify$ -- 35
+purify$ -- 66
 quote$ -- 0
-skip$ -- 93
+skip$ -- 157
 stack$ -- 0
-substring$ -- 211
-swap$ -- 47
-text.length$ -- 4
+substring$ -- 359
+swap$ -- 80
+text.length$ -- 7
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 28
+type$ -- 48
 warning$ -- 0
-while$ -- 31
-width$ -- 8
-write$ -- 83
+while$ -- 53
+width$ -- 14
+write$ -- 141
+(There was 1 error message)

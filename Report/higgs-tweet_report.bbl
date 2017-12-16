@@ -1,4 +1,10 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
+
+\bibitem{bakshy2011everyone}
+Eytan Bakshy, Jake~M Hofman, Winter~A Mason, and Duncan~J Watts.
+\newblock Everyone's an influencer: quantifying influence on twitter.
+\newblock In {\em Proceedings of the fourth ACM international conference on Web
+  search and data mining}, pages 65--74. ACM, 2011.
 
 \bibitem{bonchi2011influence}
 Francesco Bonchi.
@@ -21,11 +27,39 @@ Manlio De~Domenico, Antonio Lima, Paul Mougel, and Mirco Musolesi.
 \newblock The anatomy of a scientific rumor.
 \newblock {\em Scientific reports}, 3:2980, 2013.
 
+\bibitem{gonzalez2011dynamics}
+Sandra Gonz{\'a}lez-Bail{\'o}n, Javier Borge-Holthoefer, Alejandro Rivero, and
+  Yamir Moreno.
+\newblock The dynamics of protest recruitment through an online network.
+\newblock {\em Scientific reports}, 1:197, 2011.
+
 \bibitem{goyal2010learning}
 Amit Goyal, Francesco Bonchi, and Laks~VS Lakshmanan.
 \newblock Learning influence probabilities in social networks.
 \newblock In {\em Proceedings of the third ACM international conference on Web
   search and data mining}, pages 241--250. ACM, 2010.
+
+\bibitem{ma2016identifying}
+Ling-ling Ma, Chuang Ma, Hai-Feng Zhang, and Bing-Hong Wang.
+\newblock Identifying influential spreaders in complex networks based on
+  gravity formula.
+\newblock {\em Physica A: Statistical Mechanics and its Applications},
+  451:205--212, 2016.
+
+\bibitem{meeder2011we}
+Brendan Meeder, Brian Karrer, Amin Sayedi, R~Ravi, Christian Borgs, and
+  Jennifer Chayes.
+\newblock We know who you followed last summer: inferring social link creation
+  times in twitter.
+\newblock In {\em Proceedings of the 20th international conference on World
+  wide web}, pages 517--526. ACM, 2011.
+
+\bibitem{romero2011differences}
+Daniel~M Romero, Brendan Meeder, and Jon Kleinberg.
+\newblock Differences in the mechanics of information diffusion across topics:
+  idioms, political hashtags, and complex contagion on twitter.
+\newblock In {\em Proceedings of the 20th international conference on World
+  wide web}, pages 695--704. ACM, 2011.
 
 \bibitem{saito2008prediction}
 Kazumi Saito, Ryohei Nakano, and Masahiro Kimura.

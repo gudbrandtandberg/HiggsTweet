@@ -31,47 +31,53 @@
 
 \author{Gudbrand Tandberg}
 \affiliation{%
-\institution{University of British Colombia}
+\institution{The University of British Colombia}
 }
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-In this project we analyze the influence dynamics within a certain interest-group during a viral event. The event in question is the 4. July 2012 discovery of the Higgs boson, made by researchers at CERN in Switzerland. We study a scraped dataset comprising of an underlying 450k-user Twitter follower network together with 13M lines of an action log, collected between the 1st and 8th of July 2012. We find that 
+In this project we analyze the influence dynamics within a certain interest-group during a viral event. The event in question is the 4. July 2012 discovery of the Higgs boson, made by researchers at CERN in Switzerland. We study a dataset consisting of a 450k-user Twitter follower network together with a 13M line event log, collected between the 1st and 7th of July 2012. We use the event log to calculate influence probabilities between pairs of users, these weights are then used to run simulations of Independent Cascade (IC) diffusion processes and compute near-optimal seed sets using a greedy algorithm. We experiment with several different preprocessing steps and heuristics for reducing the size and runtime of the simulation and optimization steps, and compare seed-sets and expected user influence across our experiments. 
 \end{abstract}
 
 \section{Introduction}
 
-Possible goals:
+Analyzing the spread of information through a large and complex social network is a difficult and interesting problem. In the last 10 years, the Big Data revolution has been driven, to a large extent, by innovations in understanding how humans interact and live in a mobile world. At least some of this progress has been made thanks to inter-disciplinary efforts by researchers in sociology, epidemology, psychographics, computer science. Already it has become clear the immense opportunities and dramatic shifts this revolution has brought about for marketers, news agencies, individuals and more. We will see in the near dystopian future that the study of social networks will in fact be key to developing political theory (and practice) into the 21st century.
 
-Analyze the influence dynamics of a web-community during a viral event. Quite general. Quite a hard problem. 
+The main goal of the broader research agenda we are following is the open-ended and general question of analyzing the power and influence dynamics of a web-community before, during, and after a major event. This study of course has a much narrower scope. Our lower level goals for this project were twofold, first, we wanted to get hands-on experience with some of the material we covered in class, notably Influence Maximization (IM), second, we wanted to perform an as-complete-as-possible scientific exposition of a new and interesting dataset. We will see how successful we were at the end!
 
-Q: Which users to influence if we wish to spread scientific misinformation? 
+Some questions that guided our efforts are 
+\begin{itemize}
+\item \emph{Which users in the network should we influence, and when should we influence, if we wanted to spread a rumor during a viral event?}
 
-Q: Do the power dynamics computed from the action log change over time? 
+\item \emph{How do the power dynamics, as computed from an event log change over time during a viral event?}
 
-Q: Do the computed seed-nodes (using IM) differ significantly from time to time / do they differ much from simpler statistical centrality heuristics? 
+\item \emph{What does the typical and the atypical user look like, in terms of event history, during a viral event?}
 
-Interesting statistics: 
+\item \emph{Do the seed-sets (as computed using IM) differ significantly from time to time, or is there overlap?}
 
-- general activity through time of an average user (cluster?)
+\item \emph{Can the selection of seed sets be simplified, or substituted for other statistics- or feature-based heuristics? }
+
+\end{itemize}
+
+\section{Related Work}
 
 
 
-Limitations: 
+\section{Preliminaries}
+
+
+
+Present IM problem, greedy algorithm, celf
+
+\section{The Data Set}
+
+
 
 - very incomplete dataset
 
 - only pairwise interactions
-
-\section{Related Work}
-
-\section{Preliminaries}
-
-Present IM problem
-
-\section{The Data Set}
 
 Social Network + Action Log
 
