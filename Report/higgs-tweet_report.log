@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  17 DEC 2017 22:32
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  18 DEC 2017 12:25
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1242,15 +1242,8 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 125.
  (./higgs-tweet_report.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 125.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 125.
-
-
-Package rerunfilecheck Warning: File `higgs-tweet_report.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `higgs-tweet_report.out':
-(rerunfilecheck)             Before: 65D07EBA1AF93C70CF2E0D8B7991F994;1421
-(rerunfilecheck)             After:  C8CB1862484608317B6FD2144B857A4E;1414.
+Package rerunfilecheck Info: File `higgs-tweet_report.out' has not changed.
+(rerunfilecheck)             Checksum: C8CB1862484608317B6FD2144B857A4E;1414.
  ) 
 Here is how much of TeX's memory you used:
  19069 strings out of 493014
@@ -1275,7 +1268,7 @@ l/texlive/2016/texmf-dist/fonts/type1/public/libertine/LinLibertineTB.pfb></usr
 ></usr/local/texlive/2016/texmf-dist/fonts/type1/public/txfonts/rtxr.pfb></usr/
 local/texlive/2016/texmf-dist/fonts/type1/public/txfonts/txsy.pfb></usr/local/t
 exlive/2016/texmf-dist/fonts/type1/public/newtx/zxlri.pfb>
-Output written on higgs-tweet_report.pdf (2 pages, 430498 bytes).
+Output written on higgs-tweet_report.pdf (2 pages, 430494 bytes).
 PDF statistics:
  134 PDF objects out of 1000 (max. 8388607)
  105 compressed objects within 2 object streams
