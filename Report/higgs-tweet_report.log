@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  17 DEC 2017 19:50
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  17 DEC 2017 22:32
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1233,23 +1233,30 @@ LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
 ]
 (./higgs-tweet_report.bbl)
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/n' will be
-(Font)              scaled to size 9.0pt on input line 129.
+(Font)              scaled to size 9.0pt on input line 125.
  [2.2
 
 ]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 129.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 129.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 125.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 125.
  (./higgs-tweet_report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 129.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 129.
-Package rerunfilecheck Info: File `higgs-tweet_report.out' has not changed.
-(rerunfilecheck)             Checksum: 3847733B953579D39F73C759CB9187B4;1447.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 125.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 125.
+
+
+Package rerunfilecheck Warning: File `higgs-tweet_report.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `higgs-tweet_report.out':
+(rerunfilecheck)             Before: 65D07EBA1AF93C70CF2E0D8B7991F994;1421
+(rerunfilecheck)             After:  C8CB1862484608317B6FD2144B857A4E;1414.
  ) 
 Here is how much of TeX's memory you used:
- 19071 strings out of 493014
- 287345 string characters out of 6133351
+ 19069 strings out of 493014
+ 287325 string characters out of 6133351
  406409 words of memory out of 5000000
- 21897 multiletter control sequences out of 15000+600000
+ 21896 multiletter control sequences out of 15000+600000
  103487 words of font info for 200 fonts, out of 8000000 for 9000
  1302 hyphenation exceptions out of 8191
  60i,12n,94p,859b,397s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1268,10 +1275,10 @@ l/texlive/2016/texmf-dist/fonts/type1/public/libertine/LinLibertineTB.pfb></usr
 ></usr/local/texlive/2016/texmf-dist/fonts/type1/public/txfonts/rtxr.pfb></usr/
 local/texlive/2016/texmf-dist/fonts/type1/public/txfonts/txsy.pfb></usr/local/t
 exlive/2016/texmf-dist/fonts/type1/public/newtx/zxlri.pfb>
-Output written on higgs-tweet_report.pdf (2 pages, 430014 bytes).
+Output written on higgs-tweet_report.pdf (2 pages, 430498 bytes).
 PDF statistics:
- 138 PDF objects out of 1000 (max. 8388607)
- 109 compressed objects within 2 object streams
- 26 named destinations out of 1000 (max. 500000)
- 30825 words of extra memory for PDF output out of 35830 (max. 10000000)
+ 134 PDF objects out of 1000 (max. 8388607)
+ 105 compressed objects within 2 object streams
+ 25 named destinations out of 1000 (max. 500000)
+ 30817 words of extra memory for PDF output out of 35830 (max. 10000000)
 
