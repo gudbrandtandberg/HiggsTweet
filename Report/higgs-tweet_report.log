@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  18 DEC 2017 21:13
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  18 DEC 2017 21:22
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1237,11 +1237,11 @@ LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/n' will be
  [2.2]) [3.3
 
 ]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 139.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 139.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 137.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 137.
  (./higgs-tweet_report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 139.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 139.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 137.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 137.
 Package rerunfilecheck Info: File `higgs-tweet_report.out' has not changed.
 (rerunfilecheck)             Checksum: C8CB1862484608317B6FD2144B857A4E;1414.
  ) 
@@ -1252,7 +1252,7 @@ Here is how much of TeX's memory you used:
  21929 multiletter control sequences out of 15000+600000
  107652 words of font info for 230 fonts, out of 8000000 for 9000
  1302 hyphenation exceptions out of 8191
- 60i,11n,94p,1338b,580s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 60i,11n,94p,1373b,580s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/newtx/libertinealt.enc}{/
 usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/local/texli
 ve/2016/texmf-dist/fonts/enc/dvips/libertine/lbtn_25tcsq.enc}{/usr/local/texliv
@@ -1268,10 +1268,10 @@ l/texlive/2016/texmf-dist/fonts/type1/public/libertine/LinLibertineTB.pfb></usr
 ></usr/local/texlive/2016/texmf-dist/fonts/type1/public/txfonts/rtxr.pfb></usr/
 local/texlive/2016/texmf-dist/fonts/type1/public/txfonts/txsy.pfb></usr/local/t
 exlive/2016/texmf-dist/fonts/type1/public/newtx/zxlri.pfb>
-Output written on higgs-tweet_report.pdf (3 pages, 444837 bytes).
+Output written on higgs-tweet_report.pdf (3 pages, 444871 bytes).
 PDF statistics:
- 172 PDF objects out of 1000 (max. 8388607)
- 142 compressed objects within 2 object streams
+ 173 PDF objects out of 1000 (max. 8388607)
+ 143 compressed objects within 2 object streams
  37 named destinations out of 1000 (max. 500000)
  30817 words of extra memory for PDF output out of 35830 (max. 10000000)
 
