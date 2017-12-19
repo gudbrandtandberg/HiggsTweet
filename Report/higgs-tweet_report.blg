@@ -3,49 +3,57 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: higgs-tweet_report.aux
 The style file: plain.bst
 Database file #1: bibliography.bib.bib
-Repeated entry---line 97 of file bibliography.bib.bib
+Repeated entry---line 108 of file bibliography.bib.bib
  : @inproceedings{bakshy2011everyone
  :                                  ,
 I'm skipping whatever remains of this entry
-You've used 12 entries,
+Repeated entry---line 136 of file bibliography.bib.bib
+ : @inproceedings{meeder2011we
+ :                            ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 176 of file bibliography.bib.bib
+ : @inproceedings{chen2009efficient
+ :                                 ,
+I'm skipping whatever remains of this entry
+You've used 23 entries,
             2118 wiz_defined-function locations,
-            569 strings with 6644 characters,
-and the built_in function-call counts, 5312 in all, are:
-= -- 549
-> -- 245
-< -- 7
-+ -- 98
-- -- 84
-* -- 365
-:= -- 825
-add.period$ -- 43
-call.type$ -- 12
-change.case$ -- 78
+            634 strings with 8894 characters,
+and the built_in function-call counts, 9898 in all, are:
+= -- 1017
+> -- 468
+< -- 12
++ -- 185
+- -- 160
+* -- 685
+:= -- 1544
+add.period$ -- 81
+call.type$ -- 23
+change.case$ -- 148
 chr.to.int$ -- 0
-cite$ -- 12
-duplicate$ -- 214
-empty$ -- 405
-format.name$ -- 84
-if$ -- 1165
+cite$ -- 23
+duplicate$ -- 395
+empty$ -- 752
+format.name$ -- 160
+if$ -- 2161
 int.to.chr$ -- 0
-int.to.str$ -- 12
-missing$ -- 12
-newline$ -- 63
-num.names$ -- 24
-pop$ -- 89
+int.to.str$ -- 23
+missing$ -- 24
+newline$ -- 118
+num.names$ -- 46
+pop$ -- 171
 preamble$ -- 1
-purify$ -- 66
+purify$ -- 126
 quote$ -- 0
-skip$ -- 157
+skip$ -- 290
 stack$ -- 0
-substring$ -- 359
-swap$ -- 80
-text.length$ -- 7
+substring$ -- 655
+swap$ -- 141
+text.length$ -- 12
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 48
+type$ -- 90
 warning$ -- 0
-while$ -- 53
-width$ -- 14
-write$ -- 141
-(There was 1 error message)
+while$ -- 97
+width$ -- 25
+write$ -- 265
+(There were 3 error messages)
