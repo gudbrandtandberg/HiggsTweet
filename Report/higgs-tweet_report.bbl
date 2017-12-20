@@ -1,0 +1,144 @@
+\begin{thebibliography}{10}
+
+\bibitem{bakshy2011everyone}
+Eytan Bakshy, Jake~M Hofman, Winter~A Mason, and Duncan~J Watts.
+\newblock Everyone's an influencer: quantifying influence on twitter.
+\newblock In {\em Proceedings of the fourth ACM international conference on Web
+  search and data mining}, pages 65--74. ACM, 2011.
+
+\bibitem{bliss2012twitter}
+Catherine~A Bliss, Isabel~M Kloumann, Kameron~Decker Harris, Christopher~M
+  Danforth, and Peter~Sheridan Dodds.
+\newblock Twitter reciprocal reply networks exhibit assortativity with respect
+  to happiness.
+\newblock {\em Journal of Computational Science}, 3(5):388--397, 2012.
+
+\bibitem{bonchi2011influence}
+Francesco Bonchi.
+\newblock Influence propagation in social networks: A data mining perspective.
+\newblock {\em IEEE Intelligent Informatics Bulletin}, 12(1):8--16, 2011.
+
+\bibitem{chen2013information}
+Wei Chen, Laks~VS Lakshmanan, and Carlos Castillo.
+\newblock Information and influence propagation in social networks.
+\newblock {\em Synthesis Lectures on Data Management}, 5(4):1--177, 2013.
+
+\bibitem{chen2010scalable}
+Wei Chen, Chi Wang, and Yajun Wang.
+\newblock Scalable influence maximization for prevalent viral marketing in
+  large-scale social networks.
+\newblock In {\em Proceedings of the 16th ACM SIGKDD international conference
+  on Knowledge discovery and data mining}, pages 1029--1038. ACM, 2010.
+
+\bibitem{chen2009efficient}
+Wei Chen, Yajun Wang, and Siyu Yang.
+\newblock Efficient influence maximization in social networks.
+\newblock In {\em Proceedings of the 15th ACM SIGKDD international conference
+  on Knowledge discovery and data mining}, pages 199--208. ACM, 2009.
+
+\bibitem{de2013anatomy}
+Manlio De~Domenico, Antonio Lima, Paul Mougel, and Mirco Musolesi.
+\newblock The anatomy of a scientific rumor.
+\newblock {\em Scientific reports}, 3:2980, 2013.
+
+\bibitem{domingos2001mining}
+Pedro Domingos and Matt Richardson.
+\newblock Mining the network value of customers.
+\newblock In {\em Proceedings of the seventh ACM SIGKDD international
+  conference on Knowledge discovery and data mining}, pages 57--66. ACM, 2001.
+
+\bibitem{gomez2012inferring}
+Manuel Gomez-Rodriguez, Jure Leskovec, and Andreas Krause.
+\newblock Inferring networks of diffusion and influence.
+\newblock {\em ACM Transactions on Knowledge Discovery from Data (TKDD)},
+  5(4):21, 2012.
+
+\bibitem{gonzalez2011dynamics}
+Sandra Gonz{\'a}lez-Bail{\'o}n, Javier Borge-Holthoefer, Alejandro Rivero, and
+  Yamir Moreno.
+\newblock The dynamics of protest recruitment through an online network.
+\newblock {\em Scientific reports}, 1:197, 2011.
+
+\bibitem{goyal2010learning}
+Amit Goyal, Francesco Bonchi, and Laks~VS Lakshmanan.
+\newblock Learning influence probabilities in social networks.
+\newblock In {\em Proceedings of the third ACM international conference on Web
+  search and data mining}, pages 241--250. ACM, 2010.
+
+\bibitem{kempe2003maximizing}
+David Kempe, Jon Kleinberg, and {\'E}va Tardos.
+\newblock Maximizing the spread of influence through a social network.
+\newblock In {\em Proceedings of the ninth ACM SIGKDD international conference
+  on Knowledge discovery and data mining}, pages 137--146. ACM, 2003.
+
+\bibitem{kitsak2010identification}
+Maksim Kitsak, Lazaros~K Gallos, Shlomo Havlin, Fredrik Liljeros, Lev Muchnik,
+  H~Eugene Stanley, and Hern{\'a}n~A Makse.
+\newblock Identification of influential spreaders in complex networks.
+\newblock {\em Nature physics}, 6(11):888--893, 2010.
+
+\bibitem{ma2016identifying}
+Ling-ling Ma, Chuang Ma, Hai-Feng Zhang, and Bing-Hong Wang.
+\newblock Identifying influential spreaders in complex networks based on
+  gravity formula.
+\newblock {\em Physica A: Statistical Mechanics and its Applications},
+  451:205--212, 2016.
+
+\bibitem{meeder2011we}
+Brendan Meeder, Brian Karrer, Amin Sayedi, R~Ravi, Christian Borgs, and
+  Jennifer Chayes.
+\newblock We know who you followed last summer: inferring social link creation
+  times in twitter.
+\newblock In {\em Proceedings of the 20th international conference on World
+  wide web}, pages 517--526. ACM, 2011.
+
+\bibitem{rodriguez2012influence}
+Manuel~Gomez Rodriguez and Bernhard Sch{\"o}lkopf.
+\newblock Influence maximization in continuous time diffusion networks.
+\newblock {\em arXiv preprint arXiv:1205.1682}, 2012.
+
+\bibitem{romero2011differences}
+Daniel~M Romero, Brendan Meeder, and Jon Kleinberg.
+\newblock Differences in the mechanics of information diffusion across topics:
+  idioms, political hashtags, and complex contagion on twitter.
+\newblock In {\em Proceedings of the 20th international conference on World
+  wide web}, pages 695--704. ACM, 2011.
+
+\bibitem{saito2008prediction}
+Kazumi Saito, Ryohei Nakano, and Masahiro Kimura.
+\newblock Prediction of information diffusion probabilities for independent
+  cascade model.
+\newblock In {\em Knowledge-based intelligent information and engineering
+  systems}, pages 67--75. Springer, 2008.
+
+\bibitem{tang2015influence}
+Youze Tang, Yanchen Shi, and Xiaokui Xiao.
+\newblock Influence maximization in near-linear time: A martingale approach.
+\newblock In {\em Proceedings of the 2015 ACM SIGMOD International Conference
+  on Management of Data}, pages 1539--1554. ACM, 2015.
+
+\bibitem{tang2014influence}
+Youze Tang, Xiaokui Xiao, and Yanchen Shi.
+\newblock Influence maximization: Near-optimal time complexity meets practical
+  efficiency.
+\newblock In {\em Proceedings of the 2014 ACM SIGMOD international conference
+  on Management of data}, pages 75--86. ACM, 2014.
+
+\bibitem{wang2017real}
+Yanhao Wang, Qi~Fan, Yuchen Li, and Kian-Lee Tan.
+\newblock Real-time influence maximization on dynamic social streams.
+\newblock {\em Proceedings of the VLDB Endowment}, 10(7):805--816, 2017.
+
+\bibitem{wang2010community}
+Yu~Wang, Gao Cong, Guojie Song, and Kunqing Xie.
+\newblock Community-based greedy algorithm for mining top-k influential nodes
+  in mobile social networks.
+\newblock In {\em Proceedings of the 16th ACM SIGKDD international conference
+  on Knowledge discovery and data mining}, pages 1039--1048. ACM, 2010.
+
+\bibitem{watts2007viral}
+Duncan~J Watts, Jonah Peretti, and Michael Frumin.
+\newblock {\em Viral marketing for the real world}.
+\newblock Harvard Business School Pub., 2007.
+
+\end{thebibliography}
