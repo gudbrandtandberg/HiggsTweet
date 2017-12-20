@@ -83,33 +83,116 @@ The Higgs dataset was first presented in \cite{de2013anatomy}, where the authors
 
 \section{The Data Set}
 
+The dataset we are working with consists of a social network and an action log. The social network is a contains just over 450k unique Twitter users with just over 14.8M directed edges representing one user following another. The action log is a list of 563069 events of the form 
+
+\begin{center}
+\begin{verbatim}
+            user1, user2, event_type, time
+\end{verbatim}
+\end{center}
+
+where \verb+user1+ is the user who performs the action, \verb+user2+ is the user to whom the action is directed, \verb+event_type+ is one of either RT (retweet), MT (mention) or RE (reply), and \verb+time+ is the UNIX timestamp for the event. The dataset was scraped from the web using the Twitter API by the authors of \cite{de2013anatomy}. The contents of the tweets and the identity of the tweeters is, unfortunately, not available. All we do know is that all of the tweets corresponding to events in the log contained one or more of the hashtags "LHC", "Higgs", "CERN" or "boson". It would have been very interesting to have access to not only the contents of the tweets, e.g. in order to perform some sort of semantic analysis, but also to have access to standalone tweets in the period, not just user to user interactions. 
+
+Of all the events in the log, roughly 62\% of them are between two users where at least one of the users follows the other. This means that roughly 38\% of the events are directed between "complete strangers". Of all the events, 354930 are retweets, 171237 are mentions, and 36902 are replies. 
+
+The authors of \cite{de2013anatomy} identify four different periods into which the events can be divided:
+
+\begin{description}
+\item[Period I] Before the 2nd July, there were some rumors about the discovery of a Higgs-like boson at the Tevatron accelerator
+\item[Period II] On the 2nd July at 1PM GMT, scientists at the Tevatron accelerator in Fermilabs, Illinois, announced that they had discovered the Higgs boson with a 1 in 550 likelihood. 
+\item[Period III] After 2nd July and before 4th July there were many rumours about the Higgs boson discovery at the LHC. 
+\item[Period IV] The main event was the announcement on 4th July at 8AM GMT by the scientists at CERN. After 4th July, popular media covered the event. 
+\end{description}
+
+The distribution of events in the four periods are described in \autoref{tweetsperhour} and \autoref{activityperiod}. 
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=\linewidth]{Figures/tweetsperhour.png}
+\caption{Activity levels through time during the event.}
+\label{tweetsperhour}
+\end{center}
+\end{figure}
+
+\begin{table}[htp]
+\caption{Distribution of activities in the different periods.}
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+ Period & \#activities \\
+\hline
+ I      & 4181  \\
+ II    & 49604   \\    
+ III   & 356539   \\   
+ IV &   152747 \\
+ \hline
+\end{tabular}
+\end{center}
+\label{activityperiod}
+\end{table}
+
+For completeness, the distribution of in- and out-degrees of each user (number of followers and following, respectively) can be seen in \autoref{deg}, and the average values of the same quantities in \autoref{following}
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=\linewidth]{Figures/deg.png}
+\caption{Distribution of in- and out- degree of users in the social network}
+\label{deg}
+\end{center}
+\end{figure}
+
+\begin{table}[htp]
+\caption{Average number of followers/following in the social network}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+ & \#followers & \#following \\
+ \hline
+mean &32.5 & 32.5 \\
+median & 4.0 & 16.0 \\
+\hline
+\end{tabular}
+\end{center}
+\label{following}
+\end{table}
 
 
 
 \section{Our Approach}
 
-Combining social network $+$ "action edges" and running community based IM. 
+In this paper, our goal is to experiment with IM on the Higgs dataset presented above in order to answer some of the questions stated in the introduction. In order to do this, we first combine the social network and the action log into a hybrid multi-digraph as follows: every node in the social network is first added to the hybrid network. Then, every link in the social network is added as a link in the hybrid network with the label "FR". Finally, all events in the action log are added as links in the hybrid network labelled as either "RT", "MT", or "RE". Later, we will also experiment with creating these graphs on a per-period level, so as to compare seeds over time.
 
-\subsection{Computing Edge Probabilities}
+The next step is to convert the hybrid multi-digraph into a weighted digraph, where, hopefully, the weights in the graph correspond roughly to the level of influence one user exerts over the other. This digraph can then be used to run IM experiments. \autoref{multidigraph} shows the process schematically in a simple setting. 
 
-\textbf{Idea:} Use WC probs with different weights for different action-types. 
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=.5\linewidth]{Figures/MultiDiGraph.png}
+\includegraphics[width=.45\linewidth]{Figures/MultiDiGraphII.png}
+\caption{\emph{Left:} original hybrid unweighted multi-digraph
+\emph{Right: } influence-weighted digraph}
+\label{multidigraph}
+\end{center}
+\end{figure}
 
-\begin{itemize}
+As mentioned earlier, there are many viable ways of estimating the weights in the digraph. We propose a simple additive-weights method, where all parallel edges in the network are combined using predetermined weights per type, with \hspace{0.02cm}$\mathcal{W} = \{w_{\text{FR}}, w_{\text{RT}}, w_{\text{MT}}, w_{\text{RE}}\}$.
 
-\item Hard to validate
+\begin{equation}
+p_{uv} = \min \left\{1, \sum_{e = (v, u, t)}w_t \right\},
+\end{equation}
 
-\item Hard to compare
+where the sum ranges over all edges $e$ from $v$ to $u$ with type $t$. We find this method to be simple, cheap and effective, but it is hard to validate whether our formula actually captures the relative influence levels present in the user-set. We set the weights in $\mathcal{W}$ using a combination of trial and error and relative frequency of action-types in the event-log. An advantage of our weights-method is that we can for example choose to set $w_{\text{FR}} = 0$, which means the resulting digraph has roughly 15M fewer edges, drastically decreasing the runtime of our algorithms, as we will see later. 
 
-\item Effects of $p_{uv}$ on runtime. 
+It is an interesting question whether the weights can be set in a more principled manner, and we leave this for later work. However the weights $p_{uv}$ were computed, it is evident that they are paramount to the later success of our IM campaign. Given a set of weights, it is hard to validate their accuracy without expensive and intrusive user-surveys, or access to extensive event-logs. Furthermore, when faced with two different sets of weights, it is hard to compare the effects of the two, given that they will greatly impact both the diffusion process and the runtime of the algorithm. For these reasons we stick to our simple formula for the remainder of this paper. The distribution of influence weights in the network can be seen in \autoref{puv_dist}. 
 
-\item Effects of $p_{uv}$ on spread. 
-
-\end{itemize}
-
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=\linewidth]{Figures/puv_dist.png}
+\caption{Distribution of edge-weights in the social/action hybrid network}
+\label{puv_dist}
+\end{center}
+\end{figure}
 
 \subsection{Influence Maximization}
-
-Greedy, CELF, or MIA? What to do..
 
 \textbf{Idea:} Divide and conquer--preprocess with community detection. Wang (2012)
 
