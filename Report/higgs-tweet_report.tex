@@ -156,9 +156,9 @@ median & 4.0 & 16.0 \\
 \label{following}
 \end{table}
 
-
-
 \section{Our Approach}
+
+\subsection{Computing Influence Probabilities}
 
 In this paper, our goal is to experiment with IM on the Higgs dataset presented above in order to answer some of the questions stated in the introduction. In order to do this, we first combine the social network and the action log into a hybrid multi-digraph as follows: every node in the social network is first added to the hybrid network. Then, every link in the social network is added as a link in the hybrid network with the label "FR". Finally, all events in the action log are added as links in the hybrid network labelled as either "RT", "MT", or "RE". Later, we will also experiment with creating these graphs on a per-period level, so as to compare seeds over time.
 
@@ -182,7 +182,7 @@ p_{uv} = \min \left\{1, \sum_{e = (v, u, t)}w_t \right\},
 
 where the sum ranges over all edges $e$ from $v$ to $u$ with type $t$. We find this method to be simple, cheap and effective, but it is hard to validate whether our formula actually captures the relative influence levels present in the user-set. We set the weights in $\mathcal{W}$ using a combination of trial and error and relative frequency of action-types in the event-log. An advantage of our weights-method is that we can for example choose to set $w_{\text{FR}} = 0$, which means the resulting digraph has roughly 15M fewer edges, drastically decreasing the runtime of our algorithms, as we will see later. 
 
-It is an interesting question whether the weights can be set in a more principled manner, and we leave this for later work. However the weights $p_{uv}$ were computed, it is evident that they are paramount to the later success of our IM campaign. Given a set of weights, it is hard to validate their accuracy without expensive and intrusive user-surveys, or access to extensive event-logs. Furthermore, when faced with two different sets of weights, it is hard to compare the effects of the two, given that they will greatly impact both the diffusion process and the runtime of the algorithm. For these reasons we stick to our simple formula for the remainder of this paper. The distribution of influence weights in the network can be seen in \autoref{puv_dist}. 
+It is an interesting question whether the weights can be set in a more principled manner, and we leave this for later work. However the weights $p_{uv}$ are computed, it is evident that they are paramount to the later success of our IM campaign. Given a set of weights, it is hard to validate their accuracy without expensive and intrusive user-surveys, or access to extensive event-logs. Furthermore, the impact on both the diffusion process and the runtime of the algorithm is significant. For these reasons we stick to our simple formula for the remainder of this paper. The distribution of influence weights in the network can be seen in \autoref{puv_dist}. 
 
 \begin{figure}[htbp]
 \begin{center}
@@ -194,7 +194,19 @@ It is an interesting question whether the weights can be set in a more principle
 
 \subsection{Influence Maximization}
 
-\textbf{Idea:} Divide and conquer--preprocess with community detection. Wang (2012)
+Suppose we are an evil galactic empire, and due to universe-threatening circumstances we need to shut down research in particle physics on planet earth. But we are very far away from planet earth, and the only way to do this is to monitor the radio signals in space. Under these circumstances, one way to "shut down"\footnote{Stop, hinder, end, obliterate, assassinate, etc.}the particle physics community would be to infiltrate their twitter feed and manipulate them in some way. 
+
+We hope to make some progress towards an effective solution to this problem in this paper. However, we are not an evil galactic empire..
+
+The aim of Influence Maximization (IM), is to "activate" a large number of users in a social network $G = (V, E, p_{uv})$, by activating a smaller number of seed-users, $S$. Given any discrete diffusion process on a social network and a seed set $S$ denote the sets $S = A_0, A_1, \dots, A_n, \dots$ as the sets of active users at each timestep $0 \leq n \leq \infty$. Assuming it exists, denote the terminal state of the diffusion process by $\Phi(S) \subseteq V$. We define the \emph{expected spread} of a seed set $S$ as
+
+\begin{equation}
+\sigma(S) = \mathbb{E}\left[ |\Phi(S)| \right],
+\end{equation}
+
+and our goal is to maximize this function over all seed sets subject to a cost constraint. 
+
+Greedy algorithm, CELF. High cost. We will simplify!
 
 \section{Results} 
 
@@ -202,7 +214,9 @@ It is an interesting question whether the weights can be set in a more principle
 
 \subsection{Future Work}
 
-Impact of time. 
+In this paper we have only just started learning about influence dynamics on social networks. We have touched upon many interesting, difficult, and open questions in this line of research. 
+
+Continuous time models, 
 
 Content of tweets - sentiment analysis. 
 
