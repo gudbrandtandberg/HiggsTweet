@@ -36,23 +36,12 @@ def get_expected_spread(G, seed, iterations, mean=False, q=None):
         else:
             return median_spread
 
-def get_expected_spread_parallel(G, seed, iterations):
-    q = multiprocessing.Queue()
-    jobs = []
-    for j in range(parallel):
-        p = multiprocessing.Process(
-                target=get_expected_spread,
-                args=(G, seed, iterations//parallel, q))
-        jobs.append(p)
-        p.start()
-    best_in_batch = []
-    for proc in jobs:
-        best_in_batch.append(q.get())
-    for proc in jobs:
-        proc.join()
-    seed_spreads = sorted(best_in_batch)
-    median_spread = seed_spreads[len(seed_spreads)//2]
-    return median_spread
+def get_expected_spread_nodes(G, nodes, iterations, q):
+    spreads = []
+    for n in nodes:
+        spread, _ = get_expected_spread(G, [n], iterations)
+        spreads.append((n, spread))
+    q.put(spreads)
 
 def get_marginal_gain(G, base_seed, set_one, set_two, spread_iterations):
     first_seed = base_seed[:]
@@ -65,3 +54,23 @@ def get_marginal_gain(G, base_seed, set_one, set_two, spread_iterations):
     second_expected_spread, _ = get_expected_spread(G, second_seed, spread_iterations)
 
     return second_expected_spread - first_expected_spread
+
+def bfs_weight(G, n):
+    threshold = 0.01
+    frontier = [n]
+    G.node[n]['bfs'] = 1.0
+    i = 0
+    while len(frontier) is not 0:
+        new_frontier = []
+        for node in frontier:
+            parent_weight = G.node[node]['bfs']
+            for child in G.neighbors(node):
+                puv = G[node][child]['weight']
+                child_weight = G.node[child]['bfs']
+                path_weight = parent_weight * puv
+                if path_weight >= threshold:
+                    new_frontier.append(child)
+                    i += 1
+                G.node[child]['bfs'] = 1-((1-child_weight)*(1-path_weight))
+        print(i)
+        frontier = new_frontier
