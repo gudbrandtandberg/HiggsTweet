@@ -204,9 +204,9 @@ The aim of Influence Maximization (IM), is to "activate" a large number of users
 \sigma(S) = \mathbb{E}\left[ |\Phi(S)| \right],
 \end{equation}
 
-and our goal is to maximize this function over all seed sets subject to a cost constraint. 
+and our goal is to maximize this function over all seed sets subject to a cost constraint. In our experiments, we employ the Independent Cascade (IC) diffusion model which works as follows: we start with an initial set of active nodes $A_0$, and the process unfolds in discrete steps according to the following randomized rule. When node $u$ first becomes active in step $t$, it is given a single chance to activate each currently inactive neighbor $v$; it succeeds with a probability $p_{uv}$ (If $v$ has multiple newly activated neighbors, their attempts are sequenced in an arbitrary order.) If $u$ succeeds, then $v$ will become active in step $t + 1$. The process terminates when no more activations are possible.
 
-Greedy algorithm, CELF. High cost. We will simplify!
+The IC model is one of the conceptually simplest diffusion models, based on work in interacting particle systems. A particular useful property of the model is that the corresponding expected spread function $\sigma$ is monotone and submodular. This means we can use a greedy algorithm to achieve a $(1 - 1/e)$-approximation to the optimal solution. However, since the greedy algorithm needs to compute the marginal gain of adding every node in the network to the seed set at each time step, the runtime of the basic greedy algorithm is simply prohibitive for networks of the size we are working with. For this reason we chose to use the Cost Effective Lazy Forwarding (CELF) algorithm, which has a significant speedup in runtime at no sacrifice in approximation guarantee. Even so, the runtime of running a complete IM trial is quite high on our dataset. Most of the time is spent in a subprocedure that runs Monte Carlo simulations to approximate the expected spread of a seed set. It has been the main focus of our project to experiment with heuristics, alternatives, and optimizations for running a full greedy optimization on a large network, without resorting to algorithms that sacrifice another $\epsilon$ on the approximation guarantee, such as MIA and TIM.
 
 \section{Results} 
 
