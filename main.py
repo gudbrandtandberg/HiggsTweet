@@ -5,12 +5,13 @@ import multiprocessing
 import copy
 
 from spread import get_expected_spread, get_expected_spread_nodes, get_marginal_gain
+from heur import heuristic
 
 data_file = "Data/soc2.txt"
 #data_file = "Data/higgs-social_network.edgelist"
 world = [0.001, 0.01, 0.1]
-world = [0.1, 0.3, 0.06]
-world = [1.0]
+#world = [0.1, 0.3, 0.06]
+#world = [1.0]
 
 def celf(G, k, spread_iterations):
     Q = celf_get_Q(G, spread_iterations)
@@ -20,9 +21,10 @@ def celf_get_Q(G, spread_iterations):
     q = multiprocessing.Queue()
     jobs = []
     parallel = 8
-    batch_size = len(G.nodes)//parallel
+    nodes = heuristic()
+    batch_size = len(nodes)//parallel
     for j in range(parallel):
-        nodes_for_batch = list(G.nodes)[j*batch_size:(j+1)*batch_size]
+        nodes_for_batch = list(nodes)[j*batch_size:(j+1)*batch_size]
         p = multiprocessing.Process(
                 target=get_expected_spread_nodes,
                 args=(G, nodes_for_batch, spread_iterations, q))
@@ -90,7 +92,7 @@ def append_data_to_digraph(G, data_file):
                 nodes.append(t)
                 edges.append((t, f, w))
         for node in set(nodes):
-            G.add_node(node, visited=False, mg=0)
+            G.add_node(node, visited=False, flag=0, mg=0)
         G.add_weighted_edges_from(edges)
     return G
 
@@ -105,11 +107,10 @@ def main():
     append_data_to_digraph(G, data_file2)
     append_data_to_digraph(G, data_file3)
 
-    Q = celf_get_Q(G, 1)
-    for node in Q:
-        print(G.nodes[node]['mg'], node)
+#    Q = celf_get_Q(G, 1)
+#    for node in Q:
+#        print(G.nodes[node]['mg'], node)
 
-#    celf(G, k, 100)
+    celf(G, k, 100)
 
-if __name__ == "__main__":
-    main()
+main()
