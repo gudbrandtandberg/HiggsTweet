@@ -6,12 +6,7 @@ import copy
 
 from spread import get_expected_spread, get_expected_spread_nodes, get_marginal_gain
 from heur import heuristic
-
-data_file = "Data/soc2.txt"
-#data_file = "Data/higgs-social_network.edgelist"
-world = [0.001, 0.01, 0.1]
-#world = [0.1, 0.3, 0.06]
-#world = [1.0]
+from load_higgs import DataFiles
 
 def celf(G, k, spread_iterations):
     Q = celf_get_Q(G, spread_iterations)
@@ -21,7 +16,7 @@ def celf_get_Q(G, spread_iterations):
     q = multiprocessing.Queue()
     jobs = []
     parallel = 8
-    nodes = heuristic()
+    nodes = G.nodes()
     batch_size = len(nodes)//parallel
     for j in range(parallel):
         nodes_for_batch = list(nodes)[j*batch_size:(j+1)*batch_size]
@@ -60,57 +55,45 @@ def celf_get_spreads(G, k, Q, spread_iterations):
             Q = sorted(G.nodes, key=lambda x: G.node[x]['mg'], reverse=True)
     return S
 
-def get_best_seed_nodes(nodes_to_try, base_seed, G, q):
-    spread_iterations = 100
-    best_node = None
-    best_node_spread = 0
-    for n in nodes_to_try:
-        seed = base_seed[:]
-        seed.append(n)
-        seed_spreads = [get_spread(G, seed)[0] for j in range(spread_iterations)]
-        sigma_s = sum(seed_spreads)/len(seed_spreads)
-        if sigma_s > best_node_spread:
-            best_node_spread = sigma_s
-            best_node = n
-    q.put((best_node_spread, best_node))
+def create_digraph(G):
+    """
+    G is a typed multidigraph. 
+    Build a weighted digraph by combining parallel edges
+    """
+    kind_weights = {"RT" : 0.01, "RE" : 0.01, "RT" : 0.01, "MT" : 0.01, "FR" : 0.00}
 
-def get_networkx_digraph(data_file):
-    G = nx.DiGraph()
-    append_data_to_digraph(G, data_file)
-    return G
+    D = nx.DiGraph()
+    D.add_nodes_from(G)
+    nx.set_edge_attributes(D, 0.0, "weight")
 
-def append_data_to_digraph(G, data_file):
-    with open(data_file, "r") as f:
-        nodes = []
-        edges = []
-        for l in f:
-            line = l.split(" ")
-            if len(line) >= 2:
-                f, t = int(line[0]), int(line[1])
-                w = random.choice(world)
-                nodes.append(f)
-                nodes.append(t)
-                edges.append((t, f, w))
-        for node in set(nodes):
-            G.add_node(node, visited=False, flag=0, mg=0)
-        G.add_weighted_edges_from(edges)
-    return G
+    for u in G:
+        for v in G.predecessors(u):
+            edges = dict(G[v][u])
+            weight = 0.0
+            for edge in edges.values():
+                kind = edge["kind"]
+                weight += kind_weights[kind]
+            weight = np.min((weight, 1.0))
+            if weight != 0:
+                D.add_edge(u, v, weight=weight)
+    return D
 
 def main():
-    c = 256
-    k = 200
-    parallel = 8
-    data_file = "Data/higgs-reply_network.edgelist"
-    data_file2 = "Data/higgs-mention_network.edgelist"
-    data_file3 = "Data/higgs-retweet_network.edgelist"
-    G = get_networkx_digraph(data_file)
-    append_data_to_digraph(G, data_file2)
-    append_data_to_digraph(G, data_file3)
+    DF = DataFiles()
+
+    k = 50
+    spread_iterations = 100
+
+    p1_activity = nx.read_weighted_edgelist(DF.out_period_1_activity)
+    nx.set_node_attributes(p1_activity, False, 'visited')
+    nx.set_node_attributes(p1_activity, 0, 'mg')
+    nx.set_node_attributes(p1_activity, 0, 'flag')
+
+    celf(p1_activity, k, spread_iterations)
 
 #    Q = celf_get_Q(G, 1)
 #    for node in Q:
 #        print(G.nodes[node]['mg'], node)
 
-    celf(G, k, 100)
-
-main()
+if __name__ == "__main__":
+    main()

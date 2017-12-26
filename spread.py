@@ -38,7 +38,11 @@ def get_expected_spread(G, seed, iterations, mean=False, q=None):
 
 def get_expected_spread_nodes(G, nodes, iterations, q):
     spreads = []
+    i = 0
     for n in nodes:
+        i += 1
+        if i % 100 == 0:
+            print(i)
         spread, _ = get_expected_spread(G, [n], iterations)
         spreads.append((n, spread))
     q.put(spreads)
