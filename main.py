@@ -5,7 +5,6 @@ import multiprocessing
 import copy
 
 from spread import get_expected_spread, get_expected_spread_nodes, get_marginal_gain
-from heur import heuristic
 from load_higgs import DataFiles
 
 def celf(G, k, spread_iterations):
