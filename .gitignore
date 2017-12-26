@@ -10,3 +10,9 @@ Report/*.blg
 Report/*.out
 Report/*.aux
 Report/*.gz
+Report/*.dvi
+Report/*.fdb_latexmk
+Report/*.fls
+questions.txt
+all.txt
+out3.txt
