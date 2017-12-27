@@ -7,6 +7,17 @@ import copy
 from spread import get_expected_spread, get_expected_spread_nodes, get_marginal_gain
 from load_higgs import DataFiles
 
+# https://codereview.stackexchange.com/questions/4872/pythonic-split-list-into-n-random-chunks-of-roughly-equal-size
+def chunk(xs, n):
+    ys = xs[:]
+    random.shuffle(ys)
+    size, leftover = divmod(len(ys), n)
+    chunks = [ys[size*i : size*(i+1)] for i in range(n)]
+    edge = size*n
+    for i in range(leftover):
+        chunks[i%n].append(ys[edge+i])
+    return chunks
+
 def celf(G, k, spread_iterations):
     Q = celf_get_Q(G, spread_iterations)
     return celf_get_spreads(G, k, Q, spread_iterations)
@@ -15,10 +26,9 @@ def celf_get_Q(G, spread_iterations):
     q = multiprocessing.Queue()
     jobs = []
     parallel = 8
-    nodes = G.nodes()
-    batch_size = len(nodes)//parallel
+    chunks = chunk(list(G.nodes), parallel)
     for j in range(parallel):
-        nodes_for_batch = list(nodes)[j*batch_size:(j+1)*batch_size]
+        nodes_for_batch = chunks[j]
         p = multiprocessing.Process(
                 target=get_expected_spread_nodes,
                 args=(G, nodes_for_batch, spread_iterations, q))
@@ -54,36 +64,14 @@ def celf_get_spreads(G, k, Q, spread_iterations):
             Q = sorted(G.nodes, key=lambda x: G.node[x]['mg'], reverse=True)
     return S
 
-def create_digraph(G):
-    """
-    G is a typed multidigraph. 
-    Build a weighted digraph by combining parallel edges
-    """
-    kind_weights = {"RT" : 0.01, "RE" : 0.01, "RT" : 0.01, "MT" : 0.01, "FR" : 0.00}
-
-    D = nx.DiGraph()
-    D.add_nodes_from(G)
-    nx.set_edge_attributes(D, 0.0, "weight")
-
-    for u in G:
-        for v in G.predecessors(u):
-            edges = dict(G[v][u])
-            weight = 0.0
-            for edge in edges.values():
-                kind = edge["kind"]
-                weight += kind_weights[kind]
-            weight = np.min((weight, 1.0))
-            if weight != 0:
-                D.add_edge(u, v, weight=weight)
-    return D
-
 def main():
     DF = DataFiles()
 
     k = 50
     spread_iterations = 100
 
-    p1_activity = nx.read_weighted_edgelist(DF.out_period_1_activity)
+    p1_activity = nx.read_weighted_edgelist(DF.out_period_1_activity,
+            create_using=nx.DiGraph())
     nx.set_node_attributes(p1_activity, False, 'visited')
     nx.set_node_attributes(p1_activity, 0, 'mg')
     nx.set_node_attributes(p1_activity, 0, 'flag')
