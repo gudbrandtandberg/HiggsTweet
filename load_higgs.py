@@ -19,6 +19,8 @@ class DataFiles:
         self.out_social = "Data/out_subgraphs/social_graph"
         self.out_all = "Data/out_subgraphs/all_graph"
 
+        self.out_plot = "plots.txt"
+
     def load_period_1_activity(self):
         G = load_activity_graph(self.in_period_1_activity)
         return G
