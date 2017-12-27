@@ -13,6 +13,7 @@ Report/*.gz
 Report/*.dvi
 Report/*.fdb_latexmk
 Report/*.fls
+.ipynb_checkpoints/*
 
 questions.txt
 all.txt
