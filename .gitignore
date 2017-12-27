@@ -18,6 +18,7 @@ Report/*.fls
 questions.txt
 all.txt
 out3.txt
+plots.txt
 
 Data/in_subgraphs/social.txt
 Data/out_subgraphs/*
