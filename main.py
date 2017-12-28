@@ -71,44 +71,49 @@ def main():
     DF = DataFiles()
 
     k = 100
-    monte_carlo_simulations = 1000
+    monte_carlo_simulations = 100
 
     print("Running expected spread with k=" + str(k) + " and simulations="+str(monte_carlo_simulations))
 
-    with open(DF.out_plot, "w") as f:
-        graphs = [DF.out_period_1_activity, DF.out_period_2_activity, DF.out_all]
-        for in_file in graphs:
-            G = nx.read_weighted_edgelist(in_file, create_using=nx.DiGraph())
-            nx.set_node_attributes(G, False, 'visited')
-            nx.set_node_attributes(G, 0, 'mg')
-            nx.set_node_attributes(G, 0, 'flag')
+    graphs = [DF.out_period_1_activity]
+    for in_file in graphs:
+        G = nx.read_weighted_edgelist(in_file, create_using=nx.DiGraph())
+        nx.set_node_attributes(G, False, 'visited')
+        nx.set_node_attributes(G, 0, 'mg')
+        nx.set_node_attributes(G, 0, 'flag')
 
-            spreads = celf(G, k, monte_carlo_simulations)
-            top_k_indeg = get_top_k_indeg(G, k)
-            top_k_infl = get_top_k_infl(G, k)
-            plot_indeg = []
-            plot_infl = []
-            plot_random = []
-            plot_celf = []
-            for i in range(1, k+1):
-                print(i)
-                indeg, _ = get_expected_spread(G, top_k_indeg[:i], monte_carlo_simulations)
-                infl, _ = get_expected_spread(G, top_k_infl[:i], monte_carlo_simulations)
+#            spreads = celf(G, k, monte_carlo_simulations)
+        top_k_indeg = get_top_k_indeg(G, k)
+        top_k_outdeg = get_top_k_outdeg(G, k)
+        top_k_infl = get_top_k_infl(G, k)
+        plot_indeg = []
+        plot_outdeg = []
+        plot_infl = []
+        plot_random = []
+        plot_celf = []
+        for i in range(1, k+1):
+            print(i)
+            indeg, _ = get_expected_spread(G, top_k_indeg[:i], monte_carlo_simulations)
+            outdeg, _ = get_expected_spread(G, top_k_outdeg[:i], monte_carlo_simulations)
+            infl, _ = get_expected_spread(G, top_k_infl[:i], monte_carlo_simulations)
 
-                # Needs to sample multiple times to remove "lucky" samples
-                randoms = []
-                for j in range(100):
-                    r, _ = get_expected_spread(G, get_random_k(G, j), monte_carlo_simulations)
-                    randoms.append(r)
-                random = sum(randoms)/len(randoms)
-                celf_spread, _ = get_expected_spread(G, spreads[i-1], monte_carlo_simulations)
+            # Needs to sample multiple times to remove "lucky" samples
+            randoms = []
+            for j in range(10):
+                r, _ = get_expected_spread(G, get_random_k(G, k), monte_carlo_simulations)
+                randoms.append(r)
+            random = sum(randoms)/len(randoms)
+#                celf_spread, _ = get_expected_spread(G, spreads[i-1], monte_carlo_simulations)
 
-                plot_indeg.append(indeg)
-                plot_infl.append(infl)
-                plot_random.append(random)
-                plot_celf.append(celf_spread)
+            plot_indeg.append(indeg)
+            plot_outdeg.append(outdeg)
+            plot_infl.append(infl)
+            plot_random.append(random)
+#                plot_celf.append(celf_spread)
 
+        with open(DF.out_plot, "w") as f:
             f.write(" ".join(str(x) for x in plot_indeg) + "\n")
+            f.write(" ".join(str(x) for x in plot_outdeg) + "\n")
             f.write(" ".join(str(x) for x in plot_infl) + "\n")
             f.write(" ".join(str(x) for x in plot_random) + "\n")
             f.write(" ".join(str(x) for x in plot_celf) + "\n")

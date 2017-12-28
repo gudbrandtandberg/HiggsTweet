@@ -5,11 +5,16 @@ def plot_expected_spread():
     DF = DataFiles()
     with open(DF.out_plot, "r") as f:
         lines = f.readlines()
-        indeg, infl, random, celf = [l.split(" ") for l in lines]
-        plt.plot(indeg)
-        plt.plot(infl)
-        plt.plot(random)
-        plt.plot(celf)
+        indeg, outdeg, infl, random, celf = [l.split(" ") for l in lines]
+        plt.plot(indeg, label="In degree")
+        plt.plot(outdeg, label="Out degree")
+        plt.plot(infl, label="Influence")
+        plt.plot(random, label="Random")
+        plt.plot(celf, label="CELF")
+
+        plt.xlabel("#seeds (k)")
+        plt.ylabel("Expected spread")
+        plt.legend()
         plt.show()
 
 def plot_reachable():
