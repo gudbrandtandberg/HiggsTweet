@@ -104,13 +104,12 @@ The authors of \cite{de2013anatomy} identify four different periods into which t
 \item[Period IV] The main event was the announcement on 4th July at 8AM GMT by the scientists at CERN. After 4th July, popular media covered the event. 
 \end{description}
 
-The distribution of events in the four periods are described in \autoref{tweetsperhour} and \autoref{activityperiod}. As we can see from this distribution there is not much activity in the first periods, which is understandable considering the rumours were in an early phase. In this paper we will thus divide the activity into two periods.
+The distribution of events in the four periods are described in \autoref{tweetsperhour} and \autoref{activityperiod}. As we can see from this distribution there is not much activity in the first periods, which is understandable considering the rumours were in an early phase. Therefore, in this paper we will divide the activity into two periods.
 
 \begin{description}
-\item[Period I] Rumour phase. This is the combination of period I, II and III above.
-\item[Period II] Post-release (eh, har du ett smoothere navn #gubbis?). This is period IV above.
+\item[Before] Rumour phase. This is the combination of period I, II and III above.
+\item[After] Post-announcement. This is period IV above.
 \end{description}
-
 
 \begin{figure}[htbp]
 \begin{center}
@@ -121,7 +120,7 @@ The distribution of events in the four periods are described in \autoref{tweetsp
 \end{figure}
 
 \begin{table}[htp]
-\caption{Distribution of activities in the different periods.}
+\caption{Distribution of activities in the different periods defined in \cite{rodriguez2012influence}.}
 \begin{center}
 \begin{tabular}{|c|c|}
 \hline
@@ -132,6 +131,21 @@ The distribution of events in the four periods are described in \autoref{tweetsp
  III   & 171196   \\   
  IV &   383983 \\
  \hline
+\end{tabular}
+\end{center}
+\label{activityperiod}
+\end{table}
+
+\begin{table}[htp]
+\caption{Distribution of activities before and after the Higgs announcement.}
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+ Period & \#activities \\
+\hline
+Before & 179086 \\
+After & 383983 \\
+\hline
 \end{tabular}
 \end{center}
 \label{activityperiod}
@@ -166,30 +180,30 @@ median & 4.0 & 16.0 \\
 
 \subsection{Computing Influence Probabilities}
 
-In this paper, our goal is to experiment with IM on the Higgs dataset presented above in order to answer some of the questions stated in the introduction. In order to do this, we first combine the social network and the action log into a hybrid multi-digraph as follows: every node in the social network is first added to the hybrid network. Then, every link in the social network is added as a link in the hybrid network with the label "FR". Finally, all events in the action log are added as links in the hybrid network labelled as either "RT", "MT", or "RE". Later, we will also experiment with creating these graphs on a per-period level, so as to compare seeds over time.
+In this paper, our goal is to experiment with IM on the Higgs dataset presented above in order to answer some of the questions stated in the introduction. In order to do this, we first combine the social network and the action log into a hybrid multi-digraph as follows: every node in the social network is first added to the (initially empty) hybrid network. Then, every link in the social network is added as a link in the hybrid network with the label "FR". Finally, all events in the action log are added as links in the hybrid network labelled as either "RT", "MT", or "RE". Later, we will also experiment with creating these graphs on a per-period level, so as to compare seeds over time.
 
 The next step is to convert the hybrid multi-digraph into a weighted digraph, where, hopefully, the weights in the graph correspond roughly to the level of influence one user exerts over the other. This digraph can then be used to run IM experiments. \autoref{multidigraph} shows the process schematically in a simple setting. 
 
 \begin{figure}[htbp]
 \begin{center}
-\includegraphics[width=.5\linewidth]{Figures/MultiDiGraph.png}
-\includegraphics[width=.45\linewidth]{Figures/MultiDiGraphII.png}
-\caption{\emph{Left:} original hybrid unweighted multi-digraph
-\emph{Right: } influence-weighted digraph}
+\includegraphics[width=.9\linewidth]{Figures/MultiDiGraph.png}
+\includegraphics[width=.9\linewidth]{Figures/MultiDiGraphII.png}
+\caption{\emph{Top:} original hybrid unweighted multi-digraph
+\emph{Bottom: } influence-weighted digraph}
 \label{multidigraph}
 \end{center}
 \end{figure}
 
-As mentioned earlier, there are many viable ways of estimating the weights in the digraph. We propose a simple additive-weights method, where all parallel edges in the network are combined using predetermined weights per type, with \hspace{0.02cm}$\mathcal{W} = \{w_{\text{FR}}, w_{\text{RT}}, w_{\text{MT}}, w_{\text{RE}}\}$.
+As mentioned earlier, there are many viable ways of estimating the weights in the digraph. We propose a simple additive-weights method, where all parallel edges in the network are combined using predetermined weights per type, \hspace{0.02cm}$\mathcal{W} = \{w_{\text{FR}}, w_{\text{RT}}, w_{\text{MT}}, w_{\text{RE}}\}$.
 
 \begin{equation}
 p_{uv} = \min \left\{1, 
 h\left(\sum_{e = (v, u, t)}w_t\right) \right\},
 \end{equation}
 
-where the sum ranges over all edges $e$ from $v$ to $u$ with type $t$. We find this method to be simple, cheap and effective, but it is hard to validate whether our formula actually captures the relative influence levels present in the user-set. We set the weights in $\mathcal{W}$ using a combination of trial and error and relative frequency of action-types in the event-log. An advantage of our weights-method is that we can simply choose to set $w_{\text{FR}} = 0$, which means the resulting digraph has roughly 15M fewer edges, drastically decreasing the runtime of our algorithms, as we will see later. 
+where the sum ranges over all edges $e$ from $v$ to $u$ with type $t$. For our experiments, we "squeeze" the sums using a function $h$. The intuition behind this is that we want multiple actions between the same users to exhibit a diminishing returns property, i.e. the first time user A mentions user B counts more towards increasing the influence B has over A than the tenth time A mentions B. To accomplish this we use the simplest possible concave function that satisfies $h(0) = 0$ and $h(\infty) = 1$, which is $h(x) = 1 - e^{-x}$. It is also possible to both simplify ($h$ is the identity function) or to complicate (say, by learning a parameterized function $h_{\theta}$). We find our method to be simple, effective and intuitive, but it is hard to validate whether our formula actually captures the relative influence levels present in the user-set. We set the weights in $\mathcal{W}$ using a combination of trial and error and relative frequency of action-types in the event-log. An advantage of our weights-method is that we can simply choose to set $w_{\text{FR}} = 0$, resulting in a digraph which has roughly 15M fewer edges, drastically decreasing the runtime of the algorithms, as we will see later. 
 
-It is an interesting question whether the weights can be set in a more principled manner, and we leave this for later work. However the weights $p_{uv}$ are computed, it is evident that they are paramount to the later success of our IM campaign. Given a set of weights, it is hard to validate their accuracy without expensive and intrusive user-surveys, or access to extensive event-logs. Furthermore, the weight's impact on both the diffusion process and the runtime of the algorithm is significant. For these reasons we stick to our simple formula for the remainder of this paper. The distribution of influence weights in the network can be seen in \autoref{puv_dist}. 
+It is an interesting question whether the weights can be set in a more principled manner, ideally by learning from data, but this is really a whole new problem, which we avoid in this project and leave for later work. However the weights $p_{uv}$ are computed, it is evident that they are paramount to the later success of our IM campaign. Given a set of weights, it is hard to validate their accuracy without expensive and intrusive user-surveys, or access to extensive event-logs. Furthermore, the weight's impact on both the diffusion process and the runtime of the algorithm is significant. For these reasons we stick to our simple formula for the remainder of this paper. The distribution of influence weights in the network when using type-weights $\{w_{\text{FR}} = 0.0, w_{\text{RT}} = 0.1, w_{\text{MT}} = 0.1, w_{\text{RE}} = 0.1\}$ can be seen in \autoref{puv_dist}.
 
 \begin{figure}[htbp]
 \begin{center}
@@ -213,9 +227,39 @@ The aim of Influence Maximization (IM), is to "activate" a large number of users
 
 and our goal is to maximize this function over all seed sets subject to a cost constraint. In our experiments, we employ the Independent Cascade (IC) diffusion model which works as follows: we start with an initial set of active nodes $A_0$, and the process unfolds in discrete steps according to the following randomized rule. When node $u$ first becomes active in step $t$, it is given a single chance to activate each currently inactive neighbor $v$; it succeeds with a probability $p_{uv}$ (If $v$ has multiple newly activated neighbors, their attempts are sequenced in an arbitrary order.) If $u$ succeeds, then $v$ will become active in step $t + 1$. The process terminates when no more activations are possible.
 
-The IC model is one of the conceptually simplest diffusion models, based on work in interacting particle systems. A particular useful property of the model is that the corresponding expected spread function $\sigma$ is monotone and submodular. This means we can use a greedy algorithm to achieve a $(1 - 1/e)$-approximation to the optimal solution. However, since the greedy algorithm needs to compute the marginal gain of adding every node in the network to the seed set at each time step, the runtime of the basic greedy algorithm is simply prohibitive for networks of the size we are working with. For this reason we chose to use the Cost Effective Lazy Forwarding (CELF) algorithm, which has a significant speedup in runtime at no sacrifice in approximation guarantee. Even so, the runtime of running a complete IM trial is quite high on our dataset. Most of the time is spent in a subprocedure that runs Monte Carlo simulations to approximate the expected spread of a seed set. It has been the main focus of our project to experiment with heuristics, alternatives, and optimizations for running a full greedy optimization on a large network, without resorting to algorithms that sacrifice another $\epsilon$ on the approximation guarantee, such as MIA and TIM.
+The IC model is one of the conceptually simplest diffusion models, based on work in interacting particle systems. A particular useful property of the model is that the corresponding expected spread function $\sigma$ is monotone and submodular. This means we can use a greedy algorithm to achieve a $(1 - 1/e)$-approximation to the optimal solution. However, since the greedy algorithm needs to compute the marginal gain of adding every node in the network to the seed set at each time step, the runtime of the basic greedy algorithm is simply prohibitive for networks of the size we are working with. For this reason we chose to use the Cost Effective Lazy Forwarding (CELF) algorithm, which has a significant speedup in runtime at no sacrifice in approximation guarantee. Even so, the runtime of running a complete IM trial is quite high on our dataset. Most of the time is spent in a subprocedure that runs Monte Carlo simulations to approximate the expected spread of a seed set. 
 
-\section{Results} 
+\subsection{Heuristics}
+
+It has been the main focus of our project to experiment with heuristics, alternatives, and optimizations for running a full greedy optimization on a large network, without resorting to algorithms that sacrifice another $\epsilon$ on the approximation guarantee, such as MIA and TIM. In addition, we have tried to use our prior knowledge of the exact nature of the Higgs dataset to guide our experimentation. As simpler alternatives to CELF, we propose three different centrality-based heuristics for extracting top-$k$ user-sets.
+
+\begin{enumerate}
+\item \textbf{infl: } The \emph{influence} of a user is simply how many times the user occurs on the passive end of an action in the event log. A user who is mentioned, retweeted or replied to many times is considered influential. 
+\item \textbf{outdeg: } Is the out-degree of a user in the processed digraph. A high value of outdeg means this user should have influence over a large number of users.
+\item \textbf{indeg: } Is the in-degree of a user in the processed digraph. A high value of indeg means this user has been very active, or follows a large number of users. 
+\item \textbf{random: } This is the absolute minimum benchmark to compare all other methods with; $k$ nodes are selected at random from the entire user-set. 
+\end{enumerate}
+
+Our next step is to use our coarse before/after separation to further reduce experimental cost. Suppose we have some method for detecting the presence of a rumor within a certain user community. Alternatively, we might \emph{know} that a rumor is currently being disseminated across a network and we also know that that whatever is being rumored will be publicly announced at a certain time. In this case, we might consider performing some kind of costly preprocessing or computation steps early on in the rumor phase, in order to be ready to deploy a viral campaign as soon as the announcement is made. We use this idea in our experiments: we compute all the top-$k$ sets in the before phase, and use these to compute spread in the after phase. 
+
+Many variations on this theme are possible. In addition to $k$-core and other centrality-based heuristics that have been considered earlier, we also considered the option of transforming every user into a feature-vector and simply scoring each user on a scale from 0 to 1 on how likely this user is to generate large cascades. Such feature-vectors could be constructed using simple graph- and log-based statistics such as in-degree, times mentioned, etc., but could also be combined with more personal or high-level features such as age, nationality, customer history, etc., all depending on what data is available. This approach could be realized using a supervised learning approach (say, a logistic regression model trained with labels obtained from actually running some IM-solution method).
+
+Other heuristic methods for finding good seed-user sets might include outlier detection techniques or clustering. We followed up on this idea in our experiments, by turning the action log into a training set by simply counting the number of times every user was active in the four periods under study and running $k$-means on the PCA-reduced data matrix. We ran this algorithm in a two-level hierarchy, this gave us 6 clusters of users with different activity "fingerprints". The centroids of the clusters are plotted in \autoref{centroids}.
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=0.9\linewidth]{./Figures/centroids.png}
+\caption{Centroids obtained after two levels of hierarchical $k$-means on the activity levels of users in each period.}
+\label{centroids}
+\end{center}
+\end{figure}
+
+We chose not to follow up on this idea in our main experiments, although there is potential for a useful method here, since we did in fact notice a correlation between users chosen by CELF and the other heuristics and users not present in cluster 0. However we suspect simpler more traditional methods of outlier detection might be more natural.  
+
+\section{Results}
+
+We now present our results for 
+
 
 \section{Discussion}
 
@@ -228,14 +272,6 @@ Continuous time models,
 Content of tweets - sentiment analysis. 
 
 Compute $p_{uv}$ using unsupervised learning approach. Perform evaluative analysis. 
-
-\section*{TODO FREMOVER}
-\begin{enumerate}
-\item Decide on graphs, generate graphs
-\item Decide on seed sets, generate seed sets
-\item Set up and run IM experiments (on UBC cluster?)
-\item Plot \& write about the results
-\end{enumerate}
 
 \nocite{*}
 \bibliography{bibliography.bib}
