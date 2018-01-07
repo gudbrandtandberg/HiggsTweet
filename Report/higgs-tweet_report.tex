@@ -17,6 +17,11 @@
 \usepackage{algorithmic}
 \usepackage{hyperref}
 
+\definecolor{red}{rgb}{1,0,0}
+\def\red#1{{\color{red}#1}}
+\definecolor{blu}{rgb}{0,0,1}
+\def\blu#1{{\color{blu}#1}}
+
 \acmISBN{}
 \acmDOI{} 
 \setcopyright{none}
@@ -258,10 +263,37 @@ We chose not to follow up on this idea in our main experiments, although there i
 
 \section{Results}
 
-We now present our results for 
+We now present the results of the experiments we have run. In all of the experiments, the main obstacle has been tractability. We made the (in hindsight) somewhat unpractical choice of working Python. The reasons for this include ease-of-implementation, earlier experience, and the significant practicality of the Python Notebook format. If we were to revisit this project, we would definitely migrate the most critical computations to C. That being said, we did our best at speeding up our experiments as much as possible given our means. This involved parallelizing the CELF/expected spread computations and executing the programs using the PyPy interpreter. All experiments were run on a UBC server using 32 cores (xx GHz osv.. \red{mer teknisk pønsj, Kristian?}). 
 
+The first set of results are for the weighted digraph built using the method described in the beginning of last section, and using $\{w_{\text{FR}} = 0.0, w_{\text{RT}} = 0.1, w_{\text{MT}} = 0.1, w_{\text{RE}} = 0.1\}$. Unfortunately, this choice is almost a necessary evil if we want to run all the desired experiments, as the number of following-edges (15M) dwarfs the number of action edges (500k). We also compute all spreads for both the before and the after phase. In this case the network reduces to $300k$ nodes and $500000$ edges, rendering the problem barely tractable, in that it takes roughly \red{X} hours to compute. The results can be seen in \autoref{spread1}. 
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=0.9\linewidth]{Figures/spread1.png}
+\caption{Placeholder}
+\label{spread1}
+\end{center}
+\end{figure}
+
+\red{Interesting point: Intersection of seed-sets in the two periods and across the different heuristics.}
+
+In the next set of results, we used weights $\{w_{\text{FR}} = 0.01, w_{\text{RT}} = 0.1, w_{\text{MT}} = 0.1, w_{\text{RE}} = 0.1\}$. This results in a much larger network with $500k$ nodes and $15M$ edges. It should be noted however, that it is still a questionable design choice we have made in insisting on keeping the weights very small. This ensures the cascades generated are generally quite short, keeping the runtime low. For this network, running the CELF algorithm is tremendously intractable, so we only compute the spreads using our heuristics. Assuming the results above are somewhat generalizable, we expect the realized spreads using the outdeg and infl heuristics to be close to what the greedy solution might obtain. Also, we only compute the spreads in the after period, again relying on the above result that the good seed users in the before period also perform well in the after period. These results can be seen in \autoref{spread2}. 
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=0.9\linewidth]{Figures/period_2.png}
+\caption{Placeholder}
+\label{spread2}
+\end{center}
+\end{figure}
+
+\red{Kommentarer}
+
+\red{Interesting point: User 88.}
 
 \section{Discussion}
+
+\red{Her skriver vi en siste kritisk diskusjon av alt vi har fått til og alt vi ikke har fått til}
 
 \subsection{Future Work}
 
