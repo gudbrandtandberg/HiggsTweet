@@ -43,7 +43,7 @@
 \maketitle
 
 \begin{abstract}
-In this project we analyze the influence dynamics within a subset of physics-interested Twitter users before, during and after the 4th July 2012 discovery of the Higgs boson, made by researchers at CERN in Switzerland. We study a dataset consisting of a 450k-user Twitter follower network together with a 500k line event log, collected between the 1st and the 7th of July 2012. We use the event log to calculate influence probabilities between pairs of users, these weights are then used to run simulations of Independent Cascade (IC) diffusion processes and to compute near-optimal seed sets using a greedy algorithm. We experiment with several different preprocessing steps and heuristics for reducing the size and runtime of the simulation and optimization steps, and compare seed-sets and expected user influence across our experiments. 
+In this project we analyze the influence dynamics within a subset of physics-interested Twitter users before, during and after the 4th July 2012 announcement of the discovery of the Higgs boson, made by researchers at CERN in Switzerland. We study a dataset consisting of a 450k-user Twitter follower network together with a 563k line event log, collected between the 1st and the 7th of July 2012. We use the event log to calculate influence probabilities between pairs of users, these weights are then used to run simulations of Independent Cascade (IC) diffusion processes and to compute near-optimal seed sets using a greedy algorithm. We experiment with several different preprocessing steps and heuristics for reducing the size and runtime of the simulation and optimization steps, and compare seed-sets and expected user influence across our experiments. 
 \end{abstract}
 
 \section{Introduction}
@@ -63,6 +63,8 @@ Some questions that guided our efforts were
 \item \emph{Do the seed-sets (as computed using IM) differ significantly from time to time, or is there overlap?}
 
 \item \emph{To what extent can the selection of seed sets be simplified, or substituted for other statistics- or feature-based heuristics? }
+
+\item \emph{Are users who are considered influential in the pre-announcement rumor phase still considered influential in the after phase?}
 
 \end{itemize}
 
@@ -230,16 +232,16 @@ The aim of Influence Maximization (IM), is to "activate" a large number of users
 \sigma(S) = \mathbb{E}\left[ |\Phi(S)| \right],
 \end{equation}
 
-and our goal is to maximize this function over all seed sets subject to a cost constraint. In our experiments, we employ the Independent Cascade (IC) diffusion model which works as follows: we start with an initial set of active nodes $A_0$, and the process unfolds in discrete steps according to the following randomized rule. When node $u$ first becomes active in step $t$, it is given a single chance to activate each currently inactive neighbor $v$; it succeeds with a probability $p_{uv}$ (If $v$ has multiple newly activated neighbors, their attempts are sequenced in an arbitrary order.) If $u$ succeeds, then $v$ will become active in step $t + 1$. The process terminates when no more activations are possible.
+and our goal is to maximize this function over all seed sets subject to a cost constraint. In our experiments, we employ the Independent Cascade (IC) diffusion model which works as follows: we start with an initial set of active nodes $A_0$, and the process unfolds in discrete steps according to the following randomized rule. When node $u$ first becomes active in step $t$, it is given a single chance to activate each currently inactive neighbor $v$; it succeeds with a probability $p_{uv}$ (if $v$ has multiple newly activated neighbors, their attempts are sequenced in an arbitrary order.) If $u$ succeeds, then $v$ will become active in step $t + 1$. The process terminates when no more activations are possible.
 
 The IC model is one of the conceptually simplest diffusion models, based on work in interacting particle systems. A particular useful property of the model is that the corresponding expected spread function $\sigma$ is monotone and submodular. This means we can use a greedy algorithm to achieve a $(1 - 1/e)$-approximation to the optimal solution. However, since the greedy algorithm needs to compute the marginal gain of adding every node in the network to the seed set at each time step, the runtime of the basic greedy algorithm is simply prohibitive for networks of the size we are working with. For this reason we chose to use the Cost Effective Lazy Forwarding (CELF) algorithm, which has a significant speedup in runtime at no sacrifice in approximation guarantee. Even so, the runtime of running a complete IM trial is quite high on our dataset. Most of the time is spent in a subprocedure that runs Monte Carlo simulations to approximate the expected spread of a seed set. 
 
 \subsection{Heuristics}
 
-It has been the main focus of our project to experiment with heuristics, alternatives, and optimizations for running a full greedy optimization on a large network, without resorting to algorithms that sacrifice another $\epsilon$ on the approximation guarantee, such as MIA and TIM. In addition, we have tried to use our prior knowledge of the exact nature of the Higgs dataset to guide our experimentation. As simpler alternatives to CELF, we propose three different centrality-based heuristics for extracting top-$k$ user-sets.
+It has been the main focus of our project to experiment with heuristics, alternatives, and optimizations for running a full greedy optimization on a large network, without resorting to algorithms that sacrifice another $\epsilon$ on the approximation guarantee, such as MIA and TIM. In addition, we have tried to use our prior knowledge of the exact nature of the Higgs dataset to guide our experimentation. As simpler alternatives to CELF, we propose three different centrality-based heuristics for extracting top-$k$ user-sets. We chose these particular heuristics partly based on earlier work (notably the importance of centrality as presented in \cite{goyal2010learning}), and partly on our own intuition.
 
 \begin{enumerate}
-\item \textbf{infl: } The \emph{influence} of a user is simply how many times the user occurs on the passive end of an action in the event log. A user who is mentioned, retweeted or replied to many times is considered influential. 
+\item \textbf{infl: } The \emph{influence} of a user is simply the sum of the weights of all outgoing edges in the processed digraph. A user who has many followers, or is mentioned, replied to, or retweeted many times is considered influential.
 \item \textbf{outdeg: } Is the out-degree of a user in the processed digraph. A high value of outdeg means this user should have influence over a large number of users.
 \item \textbf{indeg: } Is the in-degree of a user in the processed digraph. A high value of indeg means this user has been very active, or follows a large number of users. 
 \item \textbf{random: } This is the absolute minimum benchmark to compare all other methods with; $k$ nodes are selected at random from the entire user-set. 
@@ -263,9 +265,9 @@ We chose not to follow up on this idea in our main experiments, although there i
 
 \section{Results}
 
-We now present the results of the experiments we have run. In all of the experiments, the main obstacle has been tractability. We made the (in hindsight) somewhat unpractical choice of working Python. The reasons for this include ease-of-implementation, earlier experience, and the significant practicality of the Python Notebook format. If we were to revisit this project, we would definitely migrate the most critical computations to C. That being said, we did our best at speeding up our experiments as much as possible given our means. This involved parallelizing the CELF/expected spread computations and executing the programs using the PyPy interpreter. All experiments were run on a UBC server using 32 cores (xx GHz osv.. \red{mer teknisk pønsj, Kristian?}). 
+We now present the results of the experiments we have run. In all of the experiments, the main obstacle has been tractability. We made the (in hindsight) somewhat unpractical choice of using Python. The reasons for this include ease-of-implementation, earlier experience, efficient multi-processing support, and the significant practicality of the Python Notebook format. If we were to revisit this project, we would definitely migrate the most critical computations to C. That being said, we did our best at speeding up our experiments as much as possible given our means. This involved parallelizing the CELF/expected spread computations and executing the programs using the PyPy interpreter. All experiments were run on the UBC thetis server which has a Intel Xeon E5-2698 v3 with 16 cores (32 threads) @ 2.3GHz (boosted to 2.8GHz). Our graph needs about 7 GB of RAM to be stored and the 192GB on thetis makes it possible efficiently parallelize without trashing.
 
-The first set of results are for the weighted digraph built using the method described in the beginning of last section, and using $\{w_{\text{FR}} = 0.0, w_{\text{RT}} = 0.1, w_{\text{MT}} = 0.1, w_{\text{RE}} = 0.1\}$. Unfortunately, this choice is almost a necessary evil if we want to run all the desired experiments, as the number of following-edges (15M) dwarfs the number of action edges (500k). We also compute all spreads for both the before and the after phase. In this case the network reduces to $300k$ nodes and $500000$ edges, rendering the problem barely tractable, in that it takes roughly \red{X} hours to compute. The results can be seen in \autoref{spread1}. 
+The first set of results are for the weighted digraph built using the method described in the beginning of section 4.1, and using $\{w_{\text{FR}} = 0.0, w_{\text{RT}} = 0.1, w_{\text{MT}} = 0.1, w_{\text{RE}} = 0.1\}$. Unfortunately, this choice is almost a necessary evil if we want to run all the desired experiments, as the number of following-edges (15M) dwarfs the number of action edges (563k). We also compute all spreads for both the before and the after phase. In this case the network reduces to $300k$ nodes and $563k$ edges, rendering the problem barely tractable, in that it takes roughly 17 hours to compute. The results can be seen in \autoref{spread1}.
 
 \begin{figure}[htbp]
 \begin{center}
@@ -275,9 +277,11 @@ The first set of results are for the weighted digraph built using the method des
 \end{center}
 \end{figure}
 
-\red{Interesting point: Intersection of seed-sets in the two periods and across the different heuristics.}
+We see two main results in \autoref{spread1}. First, we see that the outdeg and infl heuristics perform just as well as CELF. This is somewhat surprising, and perhaps too good to be true. In future work, it is definitely worth looking into the possible reasons for this performance. In any case, from a viral marketing campaign's HQ, this is good news. Second, we find that the seeds selected by all methods in the before period give quite good spread in the after period. This is also good news, as this can be used by our campaign to get a head start in the post announcement phase.
 
-In the next set of results, we used weights $\{w_{\text{FR}} = 0.01, w_{\text{RT}} = 0.1, w_{\text{MT}} = 0.1, w_{\text{RE}} = 0.1\}$. This results in a much larger network with $500k$ nodes and $15M$ edges. It should be noted however, that it is still a questionable design choice we have made in insisting on keeping the weights very small. This ensures the cascades generated are generally quite short, keeping the runtime low. For this network, running the CELF algorithm is tremendously intractable, so we only compute the spreads using our heuristics. Assuming the results above are somewhat generalizable, we expect the realized spreads using the outdeg and infl heuristics to be close to what the greedy solution might obtain. Also, we only compute the spreads in the after period, again relying on the above result that the good seed users in the before period also perform well in the after period. These results can be seen in \autoref{spread2}. 
+We find that for both the outdeg and infl heuristics, there is a roughly 40\% overlap in the selected seed users in the before phase and the after phase. Furthermore, within a given period, we find that there is almost 100\% overlap between the infl and outdeg heuristics. It would be interesting to see how this number changes as the weights vary, and across other heuristics, as well as comparing with the seeds selected by CELF.
+
+In the next set of results, we used weights $\{w_{\text{FR}} = 0.01, w_{\text{RT}} = 0.1, w_{\text{MT}} = 0.1, w_{\text{RE}} = 0.1\}$. This results in a much larger network with $450k$ nodes and $15M$ edges. For this network, running the CELF algorithm is tremendously intractable, so we only compute the spreads using our heuristics. Assuming the results above are somewhat generalizable, we expect the realized spreads using the outdeg and infl heuristics to be close to what the greedy solution might obtain. Also, we only compute the spreads in the after period, again relying on the above result that the good seed users in the before period also perform well in the after period. These results can be seen in \autoref{spread2}. 
 
 \begin{figure}[htbp]
 \begin{center}
@@ -289,17 +293,17 @@ In the next set of results, we used weights $\{w_{\text{FR}} = 0.01, w_{\text{RT
 
 \red{Kommentarer}
 
-\red{Interesting point: User 88.}
+Finally, we note that all our experiments agree on at least one thing: user 88 is by far the single most important user in the data set. This user appears in the top 2 of every set of seeds and it appears in a singleton cluster in the clustering experiments (cluster 5 in \autoref{centroids}). It would be interesting to see who this user ID corresponds to---Neil Tyson? the president of CERN? Brian Cox? Unfortunately we will never know.
 
-\section{Discussion}
+\section{Conclusion}
 
-\red{Her skriver vi en siste kritisk diskusjon av alt vi har fått til og alt vi ikke har fått til}
+In this paper we investigated the spread of a scientific rumor from a Influence Maximization standpoint. We experimented with different ways of preprocessing the data; building graphs, computing influence probabilities and reporting summary statistics. We implemented the CELF algorithm for seed selection and proposed a few different heuristics for faster seed selection. Our main results were that the heuristics performed comparably to CELF, and that influential users in the rumor phase tend to remain influential in the post-announcement phase. 
 
 \subsection{Future Work}
 
-In this paper we have only just started learning about influence dynamics on social networks. We have touched upon many interesting, difficult, and open questions in this line of research. 
+In this paper we have only just started learning about influence dynamics on social networks. We have touched upon many interesting, difficult, and open questions in this line of research, and we have pointed out some of these throughout the paper. 
 
-Continuous time models, 
+Continuous time models. 
 
 Content of tweets - sentiment analysis. 
 
