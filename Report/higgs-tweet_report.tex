@@ -267,13 +267,21 @@ We chose not to follow up on this idea in our main experiments, although there i
 
 We now present the results of the experiments we have run. In all of the experiments, the main obstacle has been tractability. We made the (in hindsight) somewhat unpractical choice of using Python. The reasons for this include ease-of-implementation, earlier experience, efficient multi-processing support, and the significant practicality of the Python Notebook format. If we were to revisit this project, we would definitely migrate the most critical computations to C. That being said, we did our best at speeding up our experiments as much as possible given our means. This involved parallelizing the CELF/expected spread computations and executing the programs using the PyPy interpreter. All experiments were run on the UBC thetis server which has a Intel Xeon E5-2698 v3 with 16 cores (32 threads) @ 2.3GHz (boosted to 2.8GHz). Our graph needs about 7 GB of RAM to be stored and the 192GB on thetis makes it possible efficiently parallelize without trashing.
 
-The first set of results are for the weighted digraph built using the method described in the beginning of section 4.1, and using $\{w_{\text{FR}} = 0.0, w_{\text{RT}} = 0.1, w_{\text{MT}} = 0.1, w_{\text{RE}} = 0.1\}$. Unfortunately, this choice is almost a necessary evil if we want to run all the desired experiments, as the number of following-edges (15M) dwarfs the number of action edges (563k). We also compute all spreads for both the before and the after phase. In this case the network reduces to $300k$ nodes and $563k$ edges, rendering the problem barely tractable, in that it takes roughly 17 hours to compute. The results can be seen in \autoref{spread1}.
+The first set of results are for the weighted digraph built using the method described in the beginning of section 4.1, and using $\{w_{\text{FR}} = 0.0, w_{\text{RT}} = 0.1, w_{\text{MT}} = 0.1, w_{\text{RE}} = 0.1\}$. Unfortunately, this choice is almost a necessary evil if we want to run all the desired experiments, as the number of following-edges (15M) dwarfs the number of action edges (563k). We also compute all spreads for both the before and the after phase. In this case the network reduces to $300k$ nodes and $563k$ edges, rendering the problem barely tractable, in that it takes roughly 17 hours to compute. The results can be seen in \autoref{spread1} and \autoref{spread2}.
 
 \begin{figure}[htbp]
 \begin{center}
-\includegraphics[width=0.9\linewidth]{Figures/spread1.png}
-\caption{Placeholder}
+\includegraphics[width=0.9\linewidth]{Figures/period1.png}
+\caption{Expected spread in the before phase of the action graph ($w_{\text{FR}} = 0$) using all the heuristics and CELF.}
 \label{spread1}
+\end{center}
+\end{figure}
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=0.9\linewidth]{Figures/period2.png}
+\caption{Expected spread in the after phase using all the heuristics from the combined (before and after phase) graph, and the expected spread using the heuristics from the before phase in the after phase graph.}
+\label{spread2}
 \end{center}
 \end{figure}
 
@@ -281,17 +289,17 @@ We see two main results in \autoref{spread1}. First, we see that the outdeg and 
 
 We find that for both the outdeg and infl heuristics, there is a roughly 40\% overlap in the selected seed users in the before phase and the after phase. Furthermore, within a given period, we find that there is almost 100\% overlap between the infl and outdeg heuristics. It would be interesting to see how this number changes as the weights vary, and across other heuristics, as well as comparing with the seeds selected by CELF.
 
-In the next set of results, we used weights $\{w_{\text{FR}} = 0.01, w_{\text{RT}} = 0.1, w_{\text{MT}} = 0.1, w_{\text{RE}} = 0.1\}$. This results in a much larger network with $450k$ nodes and $15M$ edges. For this network, running the CELF algorithm is tremendously intractable, so we only compute the spreads using our heuristics. Assuming the results above are somewhat generalizable, we expect the realized spreads using the outdeg and infl heuristics to be close to what the greedy solution might obtain. Also, we only compute the spreads in the after period, again relying on the above result that the good seed users in the before period also perform well in the after period. These results can be seen in \autoref{spread2}. 
+In the next set of results, we used weights $\{w_{\text{FR}} = 0.01, w_{\text{RT}} = 0.1, w_{\text{MT}} = 0.1, w_{\text{RE}} = 0.1\}$. This results in a much larger network with $450$k nodes and $15$M edges. For this network, running the CELF algorithm is tremendously intractable, so we only compute the spreads using our heuristics. Assuming the results above are somewhat generalizable, we expect the realized spreads using the outdeg and infl heuristics to be close to what the greedy solution might obtain. Also, we only compute the spreads in the after period, again relying on the above result that the good seed users in the before period also perform well in the after period. These results can be seen in \autoref{spread3}. 
 
 \begin{figure}[htbp]
 \begin{center}
-\includegraphics[width=0.9\linewidth]{Figures/period_2.png}
-\caption{Placeholder}
-\label{spread2}
+\includegraphics[width=0.9\linewidth]{Figures/p1_p2_heuristic.png}
+\caption{Expected spread in the complete graph ($w_{\text{FR}} = 0.01$) using heuristics from the before and after phase.}
+\label{spread3}
 \end{center}
 \end{figure}
 
-\red{Kommentarer}
+We see in \autoref{spread3} that all the heuristics perform equally well, regardless of which period they were computed, in contrast to \autoref{spread2}, which showed a discrepancy in performance. This shows us that the impact of the social graph dominates the action log. Further research would show if this still holds for different values of $w_{\text{FR}}$.
 
 Finally, we note that all our experiments agree on at least one thing: user 88 is by far the single most important user in the data set. This user appears in the top 2 of every set of seeds and it appears in a singleton cluster in the clustering experiments (cluster 5 in \autoref{centroids}). It would be interesting to see who this user ID corresponds to---Neil Tyson? the president of CERN? Brian Cox? Unfortunately we will never know.
 
@@ -303,11 +311,10 @@ In this paper we investigated the spread of a scientific rumor from a Influence 
 
 In this paper we have only just started learning about influence dynamics on social networks. We have touched upon many interesting, difficult, and open questions in this line of research, and we have pointed out some of these throughout the paper. 
 
-Continuous time models. 
+Given more time, we would have liked to look into different ways of learning influence weights from the action log, for instance by combining ideas from the continuous time model presented in \cite{goyal2010learning} with our additive weights method. Furthermore, our results might have been a lot more interesting had we implemented real-time IM using a sliding window through the action log, as presented in \cite{wang2017real}. This would of course have greatly improved the temporal seed-set analysis compared to our very coarse before/after segmentation.
 
-Content of tweets - sentiment analysis. 
+Given more data, it would have been interesting to use the content of the tweets in deciding on influence weights by incorporating the sentiment of the tweet. Also, having access to the identity of the users could have led to some more interesting practical implications of our results. 
 
-Compute $p_{uv}$ using unsupervised learning approach. Perform evaluative analysis. 
 
 \nocite{*}
 \bibliography{bibliography.bib}
